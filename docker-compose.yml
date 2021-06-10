@@ -1,7 +1,7 @@
 version: "3"
 services: 
     frontend:
-        build: ./frontend
+        build: ./MyBlog-Frontend
         ports: 
             - "3000:3000"
     backend:
@@ -9,4 +9,4 @@ services:
         ports: 
             - "5656:5656"
         volumes: 
-            - ./backend:/app
+            - ./MyBlog-Backend:/app
