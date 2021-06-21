@@ -1,12 +1,26 @@
 version: "3"
-services: 
-    frontend:
-        build: ./MyBlog-Frontend
-        ports: 
-            - "3000:3000"
-    backend:
-        build: ./MyBlog-Backend    
-        ports: 
-            - "5656:5656"
-        volumes: 
-            - ./MyBlog-Backend:/app
+services:
+  frontend:
+    build: ./MyBlog-Frontend
+    ports:
+      - "3000:3000"
+  backend:
+    build: ./MyBlog-Backend
+    ports:
+      - "5656:5656"
+    volumes:
+      - ./MyBlog-Backend:/app
+    depends_on: 
+      - mongodb
+  mongodb:
+    image: mongo:4.4
+    environment:
+      - MONGO_INITDB_ROOT_USERNAME=${MONGO_USERNAME}
+      - MONGO_INITDB_ROOT_PASSWORD=${MONGO_PASSWORD}
+      - MONGO_INITDB_DATABASE=${MONGO_DATABASE}
+    volumes:
+      - mongodb:/data/db
+    ports:
+      - "27017:27017"
+volumes:
+  mongodb:
