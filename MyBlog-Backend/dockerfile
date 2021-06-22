@@ -1,0 +1,11 @@
+FROM node:14.17.0-buster-slim
+
+WORKDIR /app
+
+COPY . .
+
+RUN yarn
+
+EXPOSE 5656
+
+CMD yarn run dev

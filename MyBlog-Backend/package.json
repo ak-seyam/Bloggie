@@ -1,0 +1,40 @@
+{
+  "name": "MyBlog-Backend",
+  "version": "1.0.0",
+  "description": "A backend for my blog",
+  "main": "app.js",
+  "author": "Abdullah Khaled",
+  "license": "MIT",
+  "devDependencies": {
+    "@types/express": "^4.17.12",
+    "@types/node": "^15.12.2",
+    "ts-node": "^10.0.0",
+    "tsconfig-paths": "^3.9.0",
+    "typescript": "^4.3.2"
+  },
+  "dependencies": {
+    "@typegoose/typegoose": "^7.6.1",
+    "@types/bcrypt": "^5.0.0",
+    "@types/jest": "^26.0.23",
+    "@types/mongoose": "^5.10.5",
+    "bcrypt": "^5.0.1",
+    "dotenv": "^10.0.0",
+    "express": "^4.17.1",
+    "jest": "^27.0.4",
+    "jest-coverage-badges": "^1.1.2",
+    "jest-module-name-mapper": "^0.1.5",
+    "joi": "^17.4.0",
+    "mongoose": "5.10.18",
+    "nodemon": "^2.0.7",
+    "prettier": "^2.3.1",
+    "ts-jest": "^27.0.3"
+  },
+  "scripts": {
+    "dev": "ENVIRONMENT=dev nodemon",
+    "test": "ENVIRONMENT=test jest --runInBand --verbose",
+    "test:ci": "ENVIRONMENT=ci jest --runInBand --verbose",
+    "coverage": "ENVIRONMENT=test jest --runInBand --coverage",
+    "test:badges": "yarn coverage && jest-coverage-badges",
+	"lint": "prettier --write ."
+  }
+}

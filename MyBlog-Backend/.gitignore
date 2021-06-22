@@ -1,0 +1,10 @@
+.env
+node_modules/
+coverage/lcov-report
+coverage/clover.xml
+dev.env
+test.env
+prod.env
+coverage/coverage-summary.json
+coverage/coverage-final.json
+coverage/lcov.info
