@@ -1,6 +1,6 @@
-[submodule "MyBlog-Frontend"]
-	path = MyBlog-Frontend
+[submodule "Bloggie-Frontend"]
+	path = Bloggie-Frontend
 	url = git@github.com:A-Siam/MyBlog-Frontend.git
-[submodule "MyBlog-Backend"]
-	path = MyBlog-Backend
+[submodule "Bloggie-Backend"]
+	path = Bloggie-Backend
 	url = git@github.com:A-Siam/MyBlog-Backend.git
