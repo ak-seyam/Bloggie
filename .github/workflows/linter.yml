@@ -10,9 +10,6 @@ jobs:
         with:
           node-version: "14.x"
       - name: get dependencies
-        run: cd ./Bloggie-Backend && npm install
-      - name: lint
-        uses: wearerequired/lint-action@v1
-        run: cd ./Bloggie-Backend
-        with:
-          prettier: true
+        run: cd ./Bloggie-Backend && yarn install
+      - name: lint check
+        run: cd ./Bloggie-Backend && yarn lint:check

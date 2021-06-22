@@ -35,6 +35,7 @@
     "test:ci": "ENVIRONMENT=ci jest --runInBand --verbose",
     "coverage": "ENVIRONMENT=test jest --runInBand --coverage",
     "test:badges": "yarn coverage && jest-coverage-badges",
-	"lint": "prettier --write ."
+    "lint": "prettier --write .",
+    "lint:check": "prettier . -c"
   }
 }
