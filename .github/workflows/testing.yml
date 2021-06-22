@@ -17,9 +17,7 @@ jobs:
 
     steps:
       - uses: actions/checkout@v2
-      - name: Cd into backend
-        run: cd ./Bloggie-Backend
       - name: Get dependencies
-        run: yarn install --frozen-lockfile
+        run: cd ./Bloggie-Backend && yarn install --frozen-lockfile
       - name: test
-        run: yarn test:ci
+        run: cd ./Bloggie-Backend && yarn test:ci
