@@ -1,19 +1,17 @@
 name: Linter
-on:
-  [push, pull_request]
+on: [push, pull_request]
 
 jobs:
-  linter: 
+  linter:
     runs-on: ubuntu-latest
     steps:
-    - uses: actions/checkout@v1
-    - uses: actions/setup-node@v1
-      with:
-        node-version: '14.x'
-    - name: get dependencies
-      run: npm install
-    - name: lint
-      uses: wearerequired/lint-action@v1
-      with:
-        prettier: true
-      
+      - uses: actions/checkout@v1
+      - uses: actions/setup-node@v1
+        with:
+          node-version: "14.x"
+      - name: get dependencies
+        run: cd ./Bloggie-Backend && npm install
+      - name: lint
+        uses: wearerequired/lint-action@v1
+        with:
+          prettier: true
