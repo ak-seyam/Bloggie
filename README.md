@@ -1,11 +1,11 @@
-# 📓 MyBlog <sub>Not my personal blog 😅</sub>
+# 📓 Bloggie <sub>Not my personal blog 😅</sub>
 
-MyBlog is webapp to write your blogs and share them, it focus on the writers experience using _Markdown_
+Bloggie is webapp to write your blogs and share them, it focus on the writers experience using _Markdown_
 as their markup language because it's super easy and fun 😁 also dealing with non RTF documents is more flexible.
 
 ## Motivation
 
-I and probably you wanted a very simple blogging system that make it easy to write your thoughts and that's it! It doesn't try to do anything other than that. And being free and open-sourced is a good plus, so that's what MyBlog does.
+I and probably you wanted a very simple blogging system that make it easy to write your thoughts and that's it! It doesn't try to do anything other than that. And being free and open-sourced is a good plus, so that's what Bloggie does.
 
 ## Getting started
 
