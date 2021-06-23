@@ -16,5 +16,5 @@ const setupTeardown = () => {
   afterAll(async () => {
     mongoose.disconnect();
   });
-}
+};
 export default setupTeardown;
