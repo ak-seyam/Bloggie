@@ -67,37 +67,4 @@ export default class ArticleLogicImpl implements ArticleLogic {
       .limit(limit);
     return res;
   }
-  async addComment(
-    articleId: ObjectId,
-    authorId: ObjectId,
-    content: string,
-    dependencyValidator: CommentDependencyValidator
-  ): Promise<DocumentType<Comment>> {
-    const { article, author } = await dependencyValidator(authorId, articleId);
-	const savedArticle = {
-		...article,
-		author: author._id
-	}
-    const comment = new Comment();
-    comment.article = article;
-    comment.author = author;
-    comment.content = content;
-    comment.date = new Date();
-    const res = await CommentModel.create({
-		article: savedArticle,
-		author,
-		content,
-		date: new Date()
-	});
-    return res;
-  }
-  deleteComment(commentId: ObjectId): Promise<boolean> {
-    throw new Error("Method not implemented.");
-  }
-  updateComment(
-    commentId: ObjectId,
-    newContent: Comment
-  ): Promise<DocumentType<Comment>> {
-    throw new Error("Method not implemented.");
-  }
 }

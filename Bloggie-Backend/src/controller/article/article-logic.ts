@@ -27,15 +27,4 @@ export default interface ArticleLogic {
     limit: number,
     dependencyValidator: CommentDependencyValidator
   ): Promise<DocumentType<Comment>[]>;
-  addComment(
-    articleId: ObjectID,
-    authorId: ObjectID,
-    content: string,
-    dependencyValidator: CommentDependencyValidator
-  ): Promise<DocumentType<Comment>>;
-  deleteComment(commentId: ObjectID): Promise<boolean>;
-  updateComment(
-    commentId: ObjectID,
-    newContent: Comment
-  ): Promise<DocumentType<Comment>>;
 }

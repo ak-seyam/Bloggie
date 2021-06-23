@@ -21,7 +21,7 @@ describe("Comment validation test suit", () => {
       await comment.validate();
       val = true;
     } catch (e) {
-      console.log(e);
+      if (correct) console.log(e);
     }
     if (correct) expect(val).toBeTruthy();
     else expect(val).toBeFalsy();
