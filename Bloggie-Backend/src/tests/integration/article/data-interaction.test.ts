@@ -15,20 +15,10 @@ import {
 import CommentsLogic from "@controller/comment/comments-logic-impl";
 import CommentsLogicImpl from "@controller/comment/comments-logic-impl";
 import articleCreation from "@tests/utils/articles/article-creation";
+import setupTeardown from "@tests/utils/data-interaction/setup-teardown";
 
 describe("Data interaction suit", () => {
-  beforeAll(async () => {
-    require("../../../env_setter");
-    require("@utils/database/database-connection");
-  });
-  afterEach(async () => {
-    await UserModel.remove({});
-    await ArticleModel.remove({});
-    await CommentModel.remove({});
-  });
-  afterAll(async () => {
-    mongoose.disconnect();
-  });
+  setupTeardown();
   const commonWriter = new User();
   commonWriter.email = "email@gmail.com";
   commonWriter.firstName = "firstName";

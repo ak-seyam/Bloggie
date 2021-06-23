@@ -4,22 +4,10 @@ import UserModel, { User } from "@models/user/user";
 import mongoose from "mongoose";
 import { ObjectId } from "mongodb";
 import UserInputError from "@utils/database/user-input-error";
+import setupTeardown from "@tests/utils/data-interaction/setup-teardown";
 
 describe("User data interaction suit", () => {
-  beforeAll(async () => {
-    // set the environment variables
-    require("../../../env_setter");
-    // connect to database
-    require("@utils/database/database-connection");
-  });
-
-  afterEach(async () => {
-    await UserModel.remove({});
-  });
-
-  afterAll(async () => {
-    await mongoose.disconnect();
-  });
+  setupTeardown();
 
   const initUser = new User();
   initUser.firstName = "first";

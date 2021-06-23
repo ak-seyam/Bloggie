@@ -5,23 +5,13 @@ import ArticleModel from "@models/article/article";
 import CommentModel from "@models/article/comments";
 import UserModel from "@models/user/user";
 import articleCreation from "@tests/utils/articles/article-creation";
+import setupTeardown from "@tests/utils/data-interaction/setup-teardown";
 import { mongoose } from "@typegoose/typegoose";
 import UserInputError from "@utils/database/user-input-error";
 import { ObjectID } from "mongodb";
 
 describe("Comments data interaction test suit", () => {
-  beforeAll(async () => {
-    require("../../../env_setter");
-    require("@utils/database/database-connection");
-  });
-  afterEach(async () => {
-    await UserModel.remove({});
-    await ArticleModel.remove({});
-    await CommentModel.remove({});
-  });
-  afterAll(async () => {
-    mongoose.disconnect();
-  });
+  setupTeardown();
   test("should create comment successfully", async () => {
     const { article, user } = await articleCreation();
     const commentsLogic: CommentsLogic = new CommentsLogicImpl();
