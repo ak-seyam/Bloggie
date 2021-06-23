@@ -96,4 +96,32 @@ describe("Comments data interaction test suit", () => {
     const res = await commentLogic.deleteComment(new ObjectID());
     expect(res).toBe(false);
   });
+
+  test("should get comment by id", async () => {
+    const { article, user } = await articleCreation();
+    const commentsLogic: CommentsLogic = new CommentsLogicImpl();
+    const content = "Yay! this is the best article ever!";
+    const comment = await commentsLogic.addComment(
+      article._id,
+      user._id,
+      content,
+      commentDependencyValidator
+    );
+    const resComment = await commentsLogic.getCommentById(comment._id);
+    expect(resComment.content).toEqual(comment.content);
+    // @ts-ignore
+    expect(resComment.author).toEqual(comment.author._id);
+    // @ts-ignore
+    expect(resComment.article).toEqual(comment.article._id);
+  });
+
+  test("should reject getting comment by invalid id", async () => {
+    try {
+      const commentLogic: CommentsLogic = new CommentsLogicImpl();
+      await commentLogic.getCommentById(new ObjectID());
+      expect(true).toBeFalsy();
+    } catch (e) {
+      expect(e).toBeInstanceOf(UserInputError);
+    }
+  });
 });
