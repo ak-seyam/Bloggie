@@ -1,15 +1,15 @@
 version: "3"
 services:
   frontend:
-    build: ./MyBlog-Frontend
+    build: ./Bloggie-Frontend
     ports:
       - "3000:3000"
   backend:
-    build: ./MyBlog-Backend
+    build: ./Bloggie-Backend
     ports:
       - "5656:5656"
     volumes:
-      - ./MyBlog-Backend:/app
+      - ./Bloggie-Backend:/app
     depends_on: 
       - mongodb
   mongodb:
