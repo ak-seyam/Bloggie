@@ -11,6 +11,7 @@ export default class UserLogicImpl implements UserLogic {
     fromId: ObjectId,
     limit: number
   ): Promise<DocumentType<Article>[]> {
+    // TODO implement this after article testing
     throw new Error("Method not implemented.");
   }
   async updateUser(

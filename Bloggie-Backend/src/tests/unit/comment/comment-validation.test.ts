@@ -1,3 +1,4 @@
+import ArticleModel from "@models/article/article";
 import CommentModel from "@models/article/comments";
 import UserModel from "@models/user/user";
 
@@ -7,14 +8,21 @@ describe("Comment validation test suit", () => {
     author.firstName = "firstname";
     author.lastName = "lastname";
     author.password = "asd@!ADS13";
+    const article = new ArticleModel();
+    article.title = "very long as whatever";
+    article.content =
+      "Ullamco reprehenderit incididunt Lorem ea aute dolor quis. Aute consectetur aliquip proident consectetur in ea elit deserunt cupidatat proident officia ex commodo magna. Dolore sit consequat Lorem nisi. Enim reprehenderit aliquip cillum in labore. Adipisicing sit est non aute ullamco tempor ad occaecat dolore deserunt consectetur consectetur laboris commodo. Proident laboris minim aliquip tempor.";
     const comment = new CommentModel();
     comment.content = content;
     comment.author = author;
+    comment.article = article;
     let val = false;
     try {
       await comment.validate();
       val = true;
-    } catch (e) {}
+    } catch (e) {
+      console.log(e);
+    }
     if (correct) expect(val).toBeTruthy();
     else expect(val).toBeFalsy();
   };
