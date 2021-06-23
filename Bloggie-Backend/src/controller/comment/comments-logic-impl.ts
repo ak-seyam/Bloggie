@@ -1,8 +1,16 @@
 import { CommentDependencyValidator } from "@controller/article/dependency-validator";
 import CommentModel, { Comment } from "@models/article/comments";
+import UserModel from "@models/user/user";
 import { DocumentType } from "@typegoose/typegoose";
+import UserInputError from "@utils/database/user-input-error";
 import { ObjectID } from "mongodb";
-export default class CommentsLogicImpl {
+import CommentsLogic from "./comments-logic";
+export default class CommentsLogicImpl implements CommentsLogic {
+  async getCommentById(commentId: ObjectID): Promise<DocumentType<Comment>> {
+    const res = await CommentModel.findById(commentId);
+    if (!res) throw new UserInputError("Invalid comment id");
+    return res;
+  }
   async addComment(
     articleId: ObjectID,
     authorId: ObjectID,
@@ -27,13 +35,21 @@ export default class CommentsLogicImpl {
     });
     return res;
   }
-  deleteComment(commentId: ObjectID): Promise<boolean> {
-    throw new Error("Method not implemented.");
+  async deleteComment(commentId: ObjectID): Promise<boolean> {
+    const res = await CommentModel.remove({ _id: commentId });
+    return res.ok === 1 && res.deletedCount !== 0;
   }
-  updateComment(
+  async updateComment(
     commentId: ObjectID,
     newContent: Comment
   ): Promise<DocumentType<Comment>> {
-    throw new Error("Method not implemented.");
+    newContent.date = new Date();
+    const res = await CommentModel.findOneAndUpdate(
+      { _id: commentId },
+      newContent,
+      { new: true }
+    );
+    if (!res) throw new UserInputError("Invalid comment id");
+    return res;
   }
 }

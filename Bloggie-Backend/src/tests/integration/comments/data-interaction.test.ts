@@ -2,7 +2,7 @@ import { commentDependencyValidator } from "@controller/article/dependency-valid
 import CommentsLogic from "@controller/comment/comments-logic";
 import CommentsLogicImpl from "@controller/comment/comments-logic-impl";
 import ArticleModel from "@models/article/article";
-import CommentModel from "@models/article/comments";
+import CommentModel, { Comment } from "@models/article/comments";
 import UserModel from "@models/user/user";
 import articleCreation from "@tests/utils/articles/article-creation";
 import setupTeardown from "@tests/utils/data-interaction/setup-teardown";
@@ -41,5 +41,59 @@ describe("Comments data interaction test suit", () => {
     } catch (e) {
       expect(e).toBeInstanceOf(UserInputError);
     }
+  });
+
+  test("should should update comment", async () => {
+    const { article, user } = await articleCreation();
+    const commentLogic: CommentsLogic = new CommentsLogicImpl();
+    const content = "the best thing in this world";
+    const comment = await commentLogic.addComment(
+      article._id,
+      user._id,
+      "the best thing in this world",
+      commentDependencyValidator
+    );
+    const newComm = new Comment();
+    newComm.content = content;
+    const res = await commentLogic.updateComment(comment._id, newComm);
+    expect(res).toBeTruthy();
+    expect(res.content).toEqual(content);
+  });
+
+  test("should reject updating comment with invalid id", async () => {
+    const commentLogic: CommentsLogic = new CommentsLogicImpl();
+    try {
+      const newComm = new Comment();
+      newComm.content = "very long comment but it doesn't matter";
+      await commentLogic.updateComment(new ObjectID(), newComm);
+    } catch (e) {
+      expect(e).toBeInstanceOf(UserInputError);
+    }
+  });
+
+  test("should delete comment", async () => {
+    const { article, user } = await articleCreation();
+    const commentsLogic: CommentsLogic = new CommentsLogicImpl();
+    const content = "Yay! this is the best article ever!";
+    const comment = await commentsLogic.addComment(
+      article._id,
+      user._id,
+      content,
+      commentDependencyValidator
+    );
+    const done = await commentsLogic.deleteComment(comment._id);
+    expect(done).toBeTruthy();
+    try {
+      const c = await commentsLogic.getCommentById(comment._id);
+      expect(true).toBeFalsy();
+    } catch (e) {
+      expect(e).toBeInstanceOf(UserInputError);
+    }
+  });
+
+  test("should reject deletion of invalid comment id", async () => {
+    const commentLogic: CommentsLogic = new CommentsLogicImpl();
+    const res = await commentLogic.deleteComment(new ObjectID());
+    expect(res).toBe(false);
   });
 });

@@ -14,4 +14,5 @@ export default interface CommentsLogic {
     commentId: ObjectID,
     newContent: Comment
   ): Promise<DocumentType<Comment>>;
+  getCommentById(commentId: ObjectID): Promise<DocumentType<Comment>>;
 }
