@@ -1,11 +1,12 @@
 {
-  "name": "MyBlog-Backend",
+  "name": "Bloggie-Backend",
   "version": "1.0.0",
   "description": "A backend for my blog",
   "main": "app.js",
   "author": "Abdullah Khaled",
   "license": "MIT",
   "devDependencies": {
+    "@ef-carbon/tspm": "^2.2.5",
     "@types/express": "^4.17.12",
     "@types/node": "^15.12.2",
     "ts-node": "^10.0.0",
@@ -17,9 +18,12 @@
     "@types/bcrypt": "^5.0.0",
     "@types/jest": "^26.0.23",
     "@types/mongoose": "^5.10.5",
+    "apollo-server-express": "^2.25.2",
     "bcrypt": "^5.0.1",
+    "class-validator": "^0.13.1",
     "dotenv": "^10.0.0",
     "express": "^4.17.1",
+    "graphql": "^15.5.1",
     "jest": "^27.0.4",
     "jest-coverage-badges": "^1.1.2",
     "jest-module-name-mapper": "^0.1.5",
@@ -27,7 +31,9 @@
     "mongoose": "5.10.18",
     "nodemon": "^2.0.7",
     "prettier": "^2.3.1",
-    "ts-jest": "^27.0.3"
+    "reflect-metadata": "^0.1.13",
+    "ts-jest": "^27.0.3",
+    "type-graphql": "^1.1.1"
   },
   "scripts": {
     "dev": "ENVIRONMENT=dev nodemon",
@@ -36,6 +42,7 @@
     "coverage": "ENVIRONMENT=test jest --runInBand --coverage",
     "test:badges": "yarn coverage && jest-coverage-badges",
     "lint": "prettier --write .",
-    "lint:check": "prettier . -c"
+    "lint:check": "prettier . -c",
+    "build": "tsc && ef-tspm"
   }
 }

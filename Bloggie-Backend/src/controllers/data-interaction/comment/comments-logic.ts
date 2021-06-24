@@ -1,4 +1,4 @@
-import { CommentDependencyValidator } from "@controller/article/dependency-validator";
+import { CommentDependencyValidator } from "controllers/article/dependency-validator";
 import { Comment } from "@models/article/comments";
 import { DocumentType } from "@typegoose/typegoose";
 import { ObjectID } from "mongodb";

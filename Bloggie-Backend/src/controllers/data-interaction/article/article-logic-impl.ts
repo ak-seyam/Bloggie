@@ -36,22 +36,32 @@ export default class ArticleLogicImpl implements ArticleLogic {
     dependencyValidator: ArticleDependencyValidator
   ): Promise<DocumentType<Article>> {
     const { author } = await dependencyValidator(authorId);
-    const articleStored = await ArticleModel.create({
-      author,
-      content,
-      title,
-    });
+    let articleStored;
+    try {
+      articleStored = await ArticleModel.create({
+        author,
+        content,
+        title,
+      });
+    } catch (e) {
+      throw new UserInputError(e.message);
+    }
     return articleStored;
   }
   async updateArticle(
     articleId: ObjectId,
     newData: Article
   ): Promise<DocumentType<Article>> {
-    const res = await ArticleModel.findOneAndUpdate(
-      { _id: articleId },
-      { $set: newData },
-      { new: true }
-    ).populate("author");
+    let res;
+    try {
+      res = await ArticleModel.findOneAndUpdate(
+        { _id: articleId },
+        { $set: newData },
+        { new: true, runValidators: true }
+      ).populate("author");
+    } catch (e) {
+      throw new UserInputError(e.message);
+    }
     if (!res) throw new UserInputError("Invalid article id");
     return res;
   }

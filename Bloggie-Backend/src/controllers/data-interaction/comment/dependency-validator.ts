@@ -4,9 +4,6 @@ import { DocumentType } from "@typegoose/typegoose";
 import UserInputError from "@utils/database/user-input-error";
 import { ObjectID } from "mongodb";
 
-export type ArticleDependencyValidator = (
-  authorId: ObjectID
-) => Promise<{ author: DocumentType<User> }>;
 export type CommentDependencyValidator = (
   authorId: ObjectID,
   articleId: ObjectID
@@ -14,14 +11,6 @@ export type CommentDependencyValidator = (
   article: DocumentType<Article>;
   author: DocumentType<User>;
 }>;
-
-export const articleDependencyValidator: ArticleDependencyValidator = async (
-  authorId
-) => {
-  const author = await UserModel.findOne({ _id: authorId });
-  if (!author) throw new UserInputError("Invalid author id");
-  return { author };
-};
 
 export const commentDependencyValidator: CommentDependencyValidator = async (
   authorId,

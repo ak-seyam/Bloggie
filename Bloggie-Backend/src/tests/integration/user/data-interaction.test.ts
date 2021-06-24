@@ -1,15 +1,15 @@
-import UserLogic from "@controller/user/user-logic";
-import UserLogicImpl from "@controller/user/user-logic-impl";
+import UserLogic from "@controllers/data-interaction/user/user-logic";
+import UserLogicImpl from "@controllers/data-interaction/user/user-logic-impl";
 import UserModel, { User } from "@models/user/user";
 import mongoose from "mongoose";
 import { ObjectId } from "mongodb";
 import UserInputError from "@utils/database/user-input-error";
 import setupTeardown from "@tests/utils/data-interaction/setup-teardown";
 import articleCreation from "@tests/utils/articles/article-creation";
-import ArticleLogic from "@controller/article/article-logic";
-import ArticleLogicImpl from "@controller/article/article-logic-impl";
+import ArticleLogic from "@controllers/data-interaction/article/article-logic-impl";
+import ArticleLogicImpl from "@controllers/data-interaction/article/article-logic-impl";
 import { Article } from "@models/article/article";
-import { articleDependencyValidator } from "@controller/article/dependency-validator";
+import { articleDependencyValidator } from "@controllers/data-interaction/article/dependency-validator";
 
 describe("User data interaction suit", () => {
   setupTeardown();
@@ -35,8 +35,21 @@ describe("User data interaction suit", () => {
     expectsDifference(fields, initUser, user);
   });
 
+  test("should reject user creation with invalid data", async () => {
+    const userLogic: UserLogic = new UserLogicImpl();
+    try {
+      const user = await userLogic.createUser({
+        ...initUser,
+        firstName: "n32",
+      });
+      expect(true).toBeFalsy();
+    } catch (e) {
+      expect(e).toBeInstanceOf(UserInputError);
+    }
+  });
+
   test("should update a user", async () => {
-    const NEW_FN = "new first name";
+    const NEW_FN = "newfirstname";
     // create new user
     const userLogic: UserLogic = new UserLogicImpl();
     const user = await userLogic.createUser(initUser);
@@ -57,6 +70,22 @@ describe("User data interaction suit", () => {
     tempUser.firstName = "random";
     try {
       await userLogic.updateUser(new ObjectId(), tempUser);
+      expect(true).toBeFalsy();
+    } catch (e) {
+      expect(e).toBeInstanceOf(UserInputError);
+    }
+  });
+
+  test("should reject user with invalid new update data", async () => {
+    const NEW_FN = "new first name32";
+    // create new user
+    const userLogic: UserLogic = new UserLogicImpl();
+    const user = await userLogic.createUser(initUser);
+    // update the data of that new user
+    const tempUser = new User();
+    tempUser.firstName = NEW_FN;
+    try {
+      const newUser = await userLogic.updateUser(user._id, tempUser);
       expect(true).toBeFalsy();
     } catch (e) {
       expect(e).toBeInstanceOf(UserInputError);

@@ -1,8 +1,8 @@
-import ArticleLogic from "@controller/article/article-logic";
-import ArticleLogicImpl from "@controller/article/article-logic-impl";
-import { articleDependencyValidator } from "@controller/article/dependency-validator";
-import UserLogic from "@controller/user/user-logic";
-import UserLogicImpl from "@controller/user/user-logic-impl";
+import ArticleLogic from "@controllers/data-interaction/article/article-logic";
+import ArticleLogicImpl from "@controllers/data-interaction/article/article-logic-impl";
+import { articleDependencyValidator } from "@controllers/data-interaction/article/dependency-validator";
+import UserLogic from "@controllers/data-interaction/user/user-logic";
+import UserLogicImpl from "@controllers/data-interaction/user/user-logic-impl";
 import { User } from "@models/user/user";
 
 const articleCreation = async () => {

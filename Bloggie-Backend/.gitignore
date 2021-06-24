@@ -8,3 +8,4 @@ prod.env
 coverage/coverage-summary.json
 coverage/coverage-final.json
 coverage/lcov.info
+build/

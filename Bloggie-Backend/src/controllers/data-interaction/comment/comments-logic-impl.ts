@@ -1,4 +1,4 @@
-import { CommentDependencyValidator } from "@controller/article/dependency-validator";
+import { CommentDependencyValidator } from "@controllers/data-interaction/article/dependency-validator";
 import CommentModel, { Comment } from "@models/article/comments";
 import UserModel from "@models/user/user";
 import { DocumentType } from "@typegoose/typegoose";
@@ -27,12 +27,17 @@ export default class CommentsLogicImpl implements CommentsLogic {
     comment.author = author;
     comment.content = content;
     comment.date = new Date();
-    const res = await CommentModel.create({
-      article: savedArticle,
-      author,
-      content,
-      date: new Date(),
-    });
+    let res;
+    try {
+      res = await CommentModel.create({
+        article: savedArticle,
+        author,
+        content,
+        date: new Date(),
+      });
+    } catch (error) {
+      throw new UserInputError(error.message);
+    }
     return res;
   }
   async deleteComment(commentId: ObjectID): Promise<boolean> {
@@ -44,11 +49,16 @@ export default class CommentsLogicImpl implements CommentsLogic {
     newContent: Comment
   ): Promise<DocumentType<Comment>> {
     newContent.date = new Date();
-    const res = await CommentModel.findOneAndUpdate(
-      { _id: commentId },
-      newContent,
-      { new: true }
-    );
+    let res;
+    try {
+      res = await CommentModel.findOneAndUpdate(
+        { _id: commentId },
+        newContent,
+        { new: true, runValidators: true }
+      );
+    } catch (e) {
+      throw new UserInputError(e.message);
+    }
     if (!res) throw new UserInputError("Invalid comment id");
     return res;
   }
