@@ -6,6 +6,7 @@
   "author": "Abdullah Khaled",
   "license": "MIT",
   "devDependencies": {
+    "@ef-carbon/tspm": "^2.2.5",
     "@types/express": "^4.17.12",
     "@types/node": "^15.12.2",
     "ts-node": "^10.0.0",
@@ -41,6 +42,7 @@
     "coverage": "ENVIRONMENT=test jest --runInBand --coverage",
     "test:badges": "yarn coverage && jest-coverage-badges",
     "lint": "prettier --write .",
-    "lint:check": "prettier . -c"
+    "lint:check": "prettier . -c",
+    "build": "tsc && ef-tspm"
   }
 }

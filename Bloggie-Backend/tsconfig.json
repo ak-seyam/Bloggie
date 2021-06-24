@@ -1,6 +1,7 @@
 {
   "compilerOptions": {
-    "target": "es6",
+	"lib": ["ES6", "ESNext.AsyncIterable"],
+    "target": "ES6",
     "module": "commonjs",
     "strict": true,
     "strictPropertyInitialization": false,
@@ -8,7 +9,7 @@
     "paths": {
       "@models/*": ["models/*"],
       "@services/*": ["services/*"],
-      "@controller/*": ["controller/*"],
+      "@controllers/*": ["controllers/*"],
       "@utils/*": ["utils/*"],
       "@tests/*": ["tests/*"]
     },
@@ -16,6 +17,7 @@
     "experimentalDecorators": true,
     "emitDecoratorMetadata": true,
     "skipLibCheck": true,
-    "forceConsistentCasingInFileNames": true
+    "forceConsistentCasingInFileNames": true,
+	"outDir": "build"
   }
 }
