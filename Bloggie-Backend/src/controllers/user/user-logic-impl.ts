@@ -32,16 +32,27 @@ export default class UserLogicImpl implements UserLogic {
     userId: ObjectId,
     newData: User
   ): Promise<DocumentType<User>> {
-    const res = await UserModel.findOneAndUpdate(
-      { _id: userId },
-      { $set: newData },
-      { new: true }
-    );
+    let res;
+    try {
+      res = await UserModel.findOneAndUpdate(
+        { _id: userId },
+        { $set: newData },
+        { new: true, runValidators: true }
+      );
+    } catch (e) {
+      throw new UserInputError(e.message);
+    }
     if (!res) throw new UserInputError("Invalid user id");
     return res;
   }
   async createUser(user: User): Promise<DocumentType<User>> {
-    return UserModel.create(user);
+    let res;
+    try {
+      res = await UserModel.create(user);
+    } catch (e) {
+      throw new UserInputError(e.message);
+    }
+    return res;
   }
   async deleteUser(userId: ObjectId): Promise<boolean> {
     const res = await UserModel.deleteOne({ _id: userId });

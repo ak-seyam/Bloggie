@@ -1,4 +1,4 @@
-import { commentDependencyValidator } from "@controllers/article/dependency-validator";
+import { commentDependencyValidator } from "@controllers/comment/dependency-validator";
 import CommentsLogic from "@controllers/comment/comments-logic";
 import CommentsLogicImpl from "@controllers/comment/comments-logic-impl";
 import ArticleModel from "@models/article/article";
@@ -24,6 +24,22 @@ describe("Comments data interaction test suit", () => {
     );
     expect(comment).toBeTruthy();
     expect(comment.content).toEqual(content);
+  });
+
+  test("should reject creation of invalid comment", async () => {
+    const { article, user } = await articleCreation();
+    const commentsLogic: CommentsLogic = new CommentsLogicImpl();
+    const content = "Yay!";
+    try {
+      const comment = await commentsLogic.addComment(
+        article._id,
+        user._id,
+        content,
+        commentDependencyValidator
+      );
+    } catch (e) {
+      expect(e).toBeInstanceOf(UserInputError);
+    }
   });
 
   test("should reject creating comment with invalid author", async () => {
@@ -60,10 +76,10 @@ describe("Comments data interaction test suit", () => {
     }
   });
 
-  test("should should update comment", async () => {
+  test("should update comment", async () => {
     const { article, user } = await articleCreation();
     const commentLogic: CommentsLogic = new CommentsLogicImpl();
-    const content = "the best thing in this world";
+    const content = "the best thing in this world!";
     const comment = await commentLogic.addComment(
       article._id,
       user._id,
@@ -75,6 +91,25 @@ describe("Comments data interaction test suit", () => {
     const res = await commentLogic.updateComment(comment._id, newComm);
     expect(res).toBeTruthy();
     expect(res.content).toEqual(content);
+  });
+
+  test("should reject updating comment with invalid length", async () => {
+    const { article, user } = await articleCreation();
+    const commentLogic: CommentsLogic = new CommentsLogicImpl();
+    const content = "t";
+    const comment = await commentLogic.addComment(
+      article._id,
+      user._id,
+      "the best thing in this world",
+      commentDependencyValidator
+    );
+    const newComm = new Comment();
+    newComm.content = content;
+    try {
+      const res = await commentLogic.updateComment(comment._id, newComm);
+    } catch (e) {
+      expect(e).toBeInstanceOf(UserInputError);
+    }
   });
 
   test("should reject updating comment with invalid id", async () => {

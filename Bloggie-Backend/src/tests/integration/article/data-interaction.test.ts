@@ -8,14 +8,12 @@ import UserLogic from "@controllers/user/user-logic-impl";
 import UserLogicImpl from "@controllers/user/user-logic-impl";
 import { ObjectID } from "mongodb";
 import UserInputError from "@utils/database/user-input-error";
-import {
-  articleDependencyValidator,
-  commentDependencyValidator,
-} from "@controllers/article/dependency-validator";
+import { articleDependencyValidator } from "@controllers/article/dependency-validator";
 import CommentsLogic from "@controllers/comment/comments-logic-impl";
 import CommentsLogicImpl from "@controllers/comment/comments-logic-impl";
 import articleCreation from "@tests/utils/articles/article-creation";
 import setupTeardown from "@tests/utils/data-interaction/setup-teardown";
+import { commentDependencyValidator } from "@controllers/comment/dependency-validator";
 
 describe("Data interaction suit", () => {
   setupTeardown();
@@ -41,6 +39,24 @@ describe("Data interaction suit", () => {
     expect(article.title).toEqual(TITLE);
     // @ts-ignore
     expect(article.author._id).toEqual(user._id);
+  });
+
+  test("should reject creating article with incorrect data", async () => {
+    const TITLE = "This";
+    const userLogic: UserLogic = new UserLogicImpl();
+    const user = await userLogic.createUser(commonWriter);
+    const articleLogic: ArticleLogic = new ArticleLogicImpl();
+    try {
+      const article = await articleLogic.createArticle(
+        user._id,
+        TITLE,
+        "Do proident qui eu occaecat ut velit. Cillum ut esse minim cupidatat nisi. Cillum ullamco elit nisi sunt tempor id ad incididunt dolor aliquip quis laborum ex. Fugiat eu laborum ipsum adipisicing. Veniam ut sit ullamco eu veniam esse nisi amet pariatur sit elit proident ex quis. Ea officia aute pariatur laborum officia aliquip mollit quis laborum labore. Laboris eu labore dolore dolor irure incididunt officia est.",
+        articleDependencyValidator
+      );
+      expect(true).toBeFalsy();
+    } catch (e) {
+      expect(e).toBeInstanceOf(UserInputError);
+    }
   });
 
   test("should reject article when user id is invalid", async () => {
@@ -69,6 +85,19 @@ describe("Data interaction suit", () => {
     expect(result.content).toEqual(article.content);
     // @ts-ignore
     expect(result.author._id).toEqual(user._id);
+  });
+
+  test("should reject update with invalid title", async () => {
+    const NEW_TITLE = "A";
+    const { article, user } = await articleCreation();
+    const newArt = new Article();
+    newArt.title = NEW_TITLE;
+    const articleLogic: ArticleLogic = new ArticleLogicImpl();
+    try {
+      const result = await articleLogic.updateArticle(article._id, newArt);
+    } catch (e) {
+      expect(e).toBeInstanceOf(UserInputError);
+    }
   });
 
   test("should reject updating an article with invalid article id", async () => {
