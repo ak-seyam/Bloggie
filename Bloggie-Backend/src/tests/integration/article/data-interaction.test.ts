@@ -67,7 +67,8 @@ describe("Data interaction suit", () => {
     const result = await articleLogic.updateArticle(article._id, newArt);
     expect(result.title).toEqual(NEW_TITLE);
     expect(result.content).toEqual(article.content);
-    expect(result.author).toEqual(user._id);
+    // @ts-ignore
+    expect(result.author._id).toEqual(user._id);
   });
 
   test("should reject updating an article with invalid article id", async () => {
@@ -95,5 +96,84 @@ describe("Data interaction suit", () => {
     const articleLogic: ArticleLogic = new ArticleLogicImpl();
     const correct = await articleLogic.deleteArticle(new ObjectID());
     expect(correct).toBe(false);
+  });
+
+  test("should get article by id successfully", async () => {
+    const { article } = await articleCreation();
+    const articleLogic: ArticleLogic = new ArticleLogicImpl();
+    const resArticle = await articleLogic.getArticleById(article._id);
+    expect(article._id).toEqual(resArticle._id);
+    // @ts-ignore
+    expect(article.author._id).toEqual(resArticle.author._id);
+    // @ts-ignore
+    expect(article.author.firstName).toEqual(resArticle.author.firstName);
+  });
+
+  test("should reject getting article with invalid id", async () => {
+    const articleLogic: ArticleLogic = new ArticleLogicImpl();
+    try {
+      await articleLogic.getArticleById(new ObjectID());
+      expect(true).toBeFalsy();
+    } catch (e) {
+      expect(e).toBeInstanceOf(UserInputError);
+    }
+  });
+
+  test("should paginate comments successfully", async () => {
+    const { article, user } = await articleCreation();
+    const commentsLogic: CommentsLogic = new CommentsLogicImpl();
+    const comments = [];
+    const word = "veeeeeeeeeeeeeeeeeeeeeeery long";
+    for (let i = 0; i < 4; i++) {
+      comments.push(
+        await commentsLogic.addComment(
+          article._id,
+          user._id,
+          `${word}${i + 1}`,
+          commentDependencyValidator
+        )
+      );
+    }
+    const articleLogic: ArticleLogic = new ArticleLogicImpl();
+    const commentsOnArticle_1 = await articleLogic.getCommentsForArticle(
+      article._id,
+      2
+    );
+    expect(commentsOnArticle_1[0].content).toEqual(`${word}1`);
+    expect(commentsOnArticle_1[1].content).toEqual(`${word}2`);
+    const commentsOnArticle_2 = await articleLogic.getCommentsForArticle(
+      article._id,
+      2,
+      commentsOnArticle_1[1]._id
+    );
+    expect(commentsOnArticle_2[0].content).toEqual(`${word}3`);
+    expect(commentsOnArticle_2[1].content).toEqual(`${word}4`);
+  });
+
+  test("should get an article by title if it exist", async () => {
+    const { article } = await articleCreation();
+    const articleLogic: ArticleLogic = new ArticleLogicImpl();
+    const resArticle = await articleLogic.getArticleByTitle(article.title);
+    expect(resArticle[0].title).toEqual(article.title);
+    // @ts-ignore
+    expect(resArticle[0].author._id).toEqual(article.author._id);
+  });
+
+  test("should get an article by similar title if it exist", async () => {
+    const { article } = await articleCreation();
+    const articleLogic: ArticleLogic = new ArticleLogicImpl();
+    const resArticle = await articleLogic.getArticleByTitle(
+      article.title.toUpperCase().slice(0, article.title.length - 2)
+    );
+    expect(resArticle[0].title).toEqual(article.title);
+    // @ts-ignore
+    expect(resArticle[0].author._id).toEqual(article.author._id);
+  });
+
+  test("should reject invalid titles", async () => {
+    const { article } = await articleCreation();
+    const articleLogic: ArticleLogic = new ArticleLogicImpl();
+    const resArt = await articleLogic.getArticleByTitle("tjdklff;asdfajlj");
+    expect(resArt.length).toEqual(0);
   });
 });

@@ -43,6 +43,23 @@ describe("Comments data interaction test suit", () => {
     }
   });
 
+  test("should reject creating comment with invalid article id", async () => {
+    const { user } = await articleCreation();
+    const commentsLogic: CommentsLogic = new CommentsLogicImpl();
+    const content = "Yay! this is the best article ever!";
+    try {
+      await commentsLogic.addComment(
+        new ObjectID(),
+        user._id,
+        content,
+        commentDependencyValidator
+      );
+      expect(true).toBeFalsy();
+    } catch (e) {
+      expect(e).toBeInstanceOf(UserInputError);
+    }
+  });
+
   test("should should update comment", async () => {
     const { article, user } = await articleCreation();
     const commentLogic: CommentsLogic = new CommentsLogicImpl();

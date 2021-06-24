@@ -9,7 +9,7 @@ import {
 
 export default interface ArticleLogic {
   getArticleById(articleId: ObjectID): Promise<DocumentType<Article>>;
-  getArticleByTitle(title: string): Promise<DocumentType<Article>>;
+  getArticleByTitle(title: string): Promise<DocumentType<Article>[]>;
   createArticle(
     authorId: ObjectID,
     title: string,
@@ -23,8 +23,7 @@ export default interface ArticleLogic {
   deleteArticle(articleId: ObjectID): Promise<boolean>;
   getCommentsForArticle(
     articleId: ObjectID,
-    from: ObjectID,
     limit: number,
-    dependencyValidator: CommentDependencyValidator
+    from?: ObjectID
   ): Promise<DocumentType<Comment>[]>;
 }

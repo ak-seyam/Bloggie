@@ -11,13 +11,24 @@ import {
 
 export default class ArticleLogicImpl implements ArticleLogic {
   async getArticleById(articleId: ObjectId): Promise<DocumentType<Article>> {
-    const article = await ArticleModel.findById(articleId);
+    const article = await ArticleModel.findById(articleId).populate("author");
     if (!article) throw new UserInputError("Invalid article id");
-	return article;
-}
-  getArticleByTitle(title: string): Promise<DocumentType<Article>> {
-    throw new Error("Method not implemented.");
+    return article;
   }
+
+  // TODO this has a flaw, if title contain more stuff than the actual thing in
+  // the database it will result non
+  async getArticleByTitle(title: string): Promise<DocumentType<Article>[]> {
+    console.debug(`
+	   Warning: This has a flaw, if title contain more stuff than the actual thing in the database it will result non
+	  `);
+    const article = await ArticleModel.find({
+      title: RegExp(`.*${title}.*`, "i"),
+    }).populate("author");
+
+    return article;
+  }
+
   async createArticle(
     authorId: ObjectId,
     title: string,
@@ -40,7 +51,7 @@ export default class ArticleLogicImpl implements ArticleLogic {
       { _id: articleId },
       { $set: newData },
       { new: true }
-    );
+    ).populate("author");
     if (!res) throw new UserInputError("Invalid article id");
     return res;
   }
@@ -50,20 +61,13 @@ export default class ArticleLogicImpl implements ArticleLogic {
   }
   async getCommentsForArticle(
     articleId: ObjectId,
-    from: ObjectId,
-    limit: number
+    limit: number,
+    from?: ObjectId
   ): Promise<DocumentType<Comment>[]> {
-	const article = await this.getArticleById(articleId)
-    const res = await CommentModel.find(
-      { article: article._id },
-      from
-        ? {
-            _id: {
-              $gt: from,
-            },
-          }
-        : {}
-    )
+    const article = await this.getArticleById(articleId);
+    const res = await CommentModel.find({
+      $and: [{ article: article._id }, from ? { _id: { $gt: from } } : {}],
+    })
       .sort({ _id: 1 })
       .limit(limit);
     return res;
