@@ -1,4 +1,4 @@
-import UserLogic from "controllers/user/user-logic";
+import UserLogic from "@controllers/data-interaction/user/user-logic";
 import ArticleModel, { Article } from "@models/article/article";
 import UserModel, { User } from "@models/user/user";
 import { DocumentType } from "@typegoose/typegoose";

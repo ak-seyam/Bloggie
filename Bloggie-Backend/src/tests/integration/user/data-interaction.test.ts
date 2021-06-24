@@ -1,15 +1,15 @@
-import UserLogic from "@controllers/user/user-logic";
-import UserLogicImpl from "@controllers/user/user-logic-impl";
+import UserLogic from "@controllers/data-interaction/user/user-logic";
+import UserLogicImpl from "@controllers/data-interaction/user/user-logic-impl";
 import UserModel, { User } from "@models/user/user";
 import mongoose from "mongoose";
 import { ObjectId } from "mongodb";
 import UserInputError from "@utils/database/user-input-error";
 import setupTeardown from "@tests/utils/data-interaction/setup-teardown";
 import articleCreation from "@tests/utils/articles/article-creation";
-import ArticleLogic from "@controllers/article/article-logic-impl";
-import ArticleLogicImpl from "@controllers/article/article-logic-impl";
+import ArticleLogic from "@controllers/data-interaction/article/article-logic-impl";
+import ArticleLogicImpl from "@controllers/data-interaction/article/article-logic-impl";
 import { Article } from "@models/article/article";
-import { articleDependencyValidator } from "@controllers/article/dependency-validator";
+import { articleDependencyValidator } from "@controllers/data-interaction/article/dependency-validator";
 
 describe("User data interaction suit", () => {
   setupTeardown();
