@@ -1,19 +1,19 @@
-import ArticleLogic from "@controller/article/article-logic";
-import ArticleLogicImpl from "@controller/article/article-logic-impl";
+import ArticleLogic from "@controllers/article/article-logic";
+import ArticleLogicImpl from "@controllers/article/article-logic-impl";
 import ArticleModel, { Article } from "@models/article/article";
 import CommentModel from "@models/article/comments";
 import UserModel, { User } from "@models/user/user";
 import { mongoose } from "@typegoose/typegoose";
-import UserLogic from "@controller/user/user-logic";
-import UserLogicImpl from "@controller/user/user-logic-impl";
+import UserLogic from "@controllers/user/user-logic-impl";
+import UserLogicImpl from "@controllers/user/user-logic-impl";
 import { ObjectID } from "mongodb";
 import UserInputError from "@utils/database/user-input-error";
 import {
   articleDependencyValidator,
   commentDependencyValidator,
-} from "@controller/article/dependency-validator";
-import CommentsLogic from "@controller/comment/comments-logic-impl";
-import CommentsLogicImpl from "@controller/comment/comments-logic-impl";
+} from "@controllers/article/dependency-validator";
+import CommentsLogic from "@controllers/comment/comments-logic-impl";
+import CommentsLogicImpl from "@controllers/comment/comments-logic-impl";
 import articleCreation from "@tests/utils/articles/article-creation";
 import setupTeardown from "@tests/utils/data-interaction/setup-teardown";
 

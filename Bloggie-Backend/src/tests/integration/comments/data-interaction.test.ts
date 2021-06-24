@@ -1,6 +1,6 @@
-import { commentDependencyValidator } from "@controller/article/dependency-validator";
-import CommentsLogic from "@controller/comment/comments-logic";
-import CommentsLogicImpl from "@controller/comment/comments-logic-impl";
+import { commentDependencyValidator } from "@controllers/article/dependency-validator";
+import CommentsLogic from "@controllers/comment/comments-logic";
+import CommentsLogicImpl from "@controllers/comment/comments-logic-impl";
 import ArticleModel from "@models/article/article";
 import CommentModel, { Comment } from "@models/article/comments";
 import UserModel from "@models/user/user";
