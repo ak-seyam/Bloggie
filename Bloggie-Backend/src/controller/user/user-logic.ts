@@ -26,4 +26,9 @@ export default interface UserLogic {
    * @param after the cursor id
    */
   getUsers(limit: number, after?: ObjectID): Promise<DocumentType<User>[]>;
+  getArticlesByUser(
+    authorId: ObjectID,
+    limit: number,
+    fromId?: ObjectID
+  ): Promise<DocumentType<Article>[]>;
 }
