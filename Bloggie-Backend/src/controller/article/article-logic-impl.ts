@@ -10,9 +10,11 @@ import {
 } from "./dependency-validator";
 
 export default class ArticleLogicImpl implements ArticleLogic {
-  getArticleById(articleId: ObjectId): Promise<DocumentType<Article>> {
-    throw new Error("Method not implemented.");
-  }
+  async getArticleById(articleId: ObjectId): Promise<DocumentType<Article>> {
+    const article = await ArticleModel.findById(articleId);
+    if (!article) throw new UserInputError("Invalid article id");
+	return article;
+}
   getArticleByTitle(title: string): Promise<DocumentType<Article>> {
     throw new Error("Method not implemented.");
   }
@@ -51,8 +53,7 @@ export default class ArticleLogicImpl implements ArticleLogic {
     from: ObjectId,
     limit: number
   ): Promise<DocumentType<Comment>[]> {
-    const article = await ArticleModel.findById(articleId);
-    if (!article) throw new UserInputError("Invalid article id");
+	const article = await this.getArticleById(articleId)
     const res = await CommentModel.find(
       { article: article._id },
       from
