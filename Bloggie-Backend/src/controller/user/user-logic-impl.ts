@@ -1,17 +1,32 @@
 import UserLogic from "@controller/user/user-logic";
-import { Article } from "@models/article/article";
+import ArticleModel, { Article } from "@models/article/article";
 import UserModel, { User } from "@models/user/user";
 import { DocumentType } from "@typegoose/typegoose";
 import UserInputError from "@utils/database/user-input-error";
 import { ObjectId } from "mongodb";
 
 export default class UserLogicImpl implements UserLogic {
-  getAllArticles(
+  async getArticlesByUser(
     authorId: ObjectId,
-    fromId: ObjectId,
-    limit: number
+    limit: number,
+    fromId?: ObjectId
   ): Promise<DocumentType<Article>[]> {
-    throw new Error("Method not implemented.");
+    const res = await ArticleModel.find({
+      $and: [
+        { author: authorId },
+        fromId
+          ? {
+              _id: {
+                $gt: fromId,
+              },
+            }
+          : {},
+      ],
+    })
+      .populate("author")
+      .sort({ _id: 1 })
+      .limit(limit);
+    return res;
   }
   async updateUser(
     userId: ObjectId,

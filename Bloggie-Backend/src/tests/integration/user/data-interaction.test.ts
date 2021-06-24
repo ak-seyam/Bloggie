@@ -4,22 +4,15 @@ import UserModel, { User } from "@models/user/user";
 import mongoose from "mongoose";
 import { ObjectId } from "mongodb";
 import UserInputError from "@utils/database/user-input-error";
+import setupTeardown from "@tests/utils/data-interaction/setup-teardown";
+import articleCreation from "@tests/utils/articles/article-creation";
+import ArticleLogic from "@controller/article/article-logic";
+import ArticleLogicImpl from "@controller/article/article-logic-impl";
+import { Article } from "@models/article/article";
+import { articleDependencyValidator } from "@controller/article/dependency-validator";
 
 describe("User data interaction suit", () => {
-  beforeAll(async () => {
-    // set the environment variables
-    require("../../../env_setter");
-    // connect to database
-    require("@utils/database/database-connection");
-  });
-
-  afterEach(async () => {
-    await UserModel.remove({});
-  });
-
-  afterAll(async () => {
-    await mongoose.disconnect();
-  });
+  setupTeardown();
 
   const initUser = new User();
   initUser.firstName = "first";
@@ -160,5 +153,39 @@ describe("User data interaction suit", () => {
     } catch (e) {
       expect(e).toBeInstanceOf(UserInputError);
     }
+  });
+  test("should get all articles by user", async () => {
+    const { article, user } = await articleCreation();
+    const articleLogic: ArticleLogic = new ArticleLogicImpl();
+    const articles = [];
+    const word = `Very long title yes it is haha `;
+    for (let i = 0; i < 3; i++) {
+      await articleLogic.createArticle(
+        user._id,
+        `${word}${i + 2}`,
+        "Id adipisicing et Lorem eu irure ex dolor id amet est reprehenderit. Tempor quis ut eu esse ipsum id magna ullamco aliqua elit magna ea. Laboris veniam Lorem deserunt mollit deserunt. Irure quis proident culpa qui reprehenderit. Mollit duis adipisicing minim esse ullamco.",
+        articleDependencyValidator
+      );
+    }
+    const userLogic: UserLogic = new UserLogicImpl();
+    const articles_1 = await userLogic.getArticlesByUser(user._id, 2);
+    expect(articles_1[0].title).toEqual(article.title);
+    expect(articles_1[1].title).toEqual(`${word}2`);
+    const articles_2 = await userLogic.getArticlesByUser(
+      user._id,
+      2,
+      articles_1[1]._id
+    );
+    expect(articles_2[0].title).toEqual(`${word}3`);
+    expect(articles_2[1].title).toEqual(`${word}4`);
+    // @ts-ignore
+    expect(articles_2[1].author._id).toEqual(user._id);
+  });
+
+  test("should return empty list if user doesn't have articles", async () => {
+    const userLogic: UserLogic = new UserLogicImpl();
+    const res = await userLogic.createUser(initUser);
+    const resArt = await userLogic.getArticlesByUser(res._id, 2);
+    expect(resArt.length).toEqual(0);
   });
 });
