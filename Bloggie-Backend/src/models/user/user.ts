@@ -108,6 +108,7 @@ export class User {
   @prop()
   public isThirdParty: boolean;
 
+  @Field()
   @prop({ enum: Role, default: Role.MEMBER })
   public role: Role;
 
