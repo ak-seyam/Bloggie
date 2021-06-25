@@ -35,6 +35,14 @@ describe("User data interaction suit", () => {
     expectsDifference(fields, initUser, user);
   });
 
+  test("should mirror the _id field into userId", async () => {
+    const userLogic: UserLogic = new UserLogicImpl();
+    const user = await userLogic.createUser(initUser);
+    expect(user).toBeTruthy();
+    expect(user._id).toBeTruthy();
+    expect(user._id).toEqual(user.userId);
+  });
+
   test("should reject user creation with invalid data", async () => {
     const userLogic: UserLogic = new UserLogicImpl();
     try {

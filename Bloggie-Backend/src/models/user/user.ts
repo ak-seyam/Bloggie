@@ -1,8 +1,15 @@
-import { prop, getModelForClass, pre } from "@typegoose/typegoose";
+import {
+  prop,
+  getModelForClass,
+  pre,
+  index,
+  ModelOptions,
+  post,
+} from "@typegoose/typegoose";
 import PasswordHash from "@utils/password/password-hash";
 import BcryptPasswordHash from "@utils/password/bcrypt-password-hash";
-import { ObjectId } from "mongodb";
 import UserInputError from "@utils/database/user-input-error";
+import { ObjectId } from "mongodb";
 
 enum Role {
   MEMBER = "member",
@@ -31,7 +38,14 @@ const nameValidator = (name: string) => {
   this.password = await passwordHash.hash(this.password);
   next();
 })
+@pre<User>("save", function (next) {
+  this.userId = this._id;
+  next();
+})
 export class User {
+  @prop({ index: true, unique: true })
+  userId: ObjectId;
+
   @prop({
     required: true,
     validate: {
