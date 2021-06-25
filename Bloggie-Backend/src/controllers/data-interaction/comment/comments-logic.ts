@@ -6,7 +6,7 @@ export default interface CommentsLogic {
   addComment(
     articleId: ObjectID,
     authorId: ObjectID,
-	newData: Comment,
+    newData: Comment,
     dependencyValidator: CommentDependencyValidator
   ): Promise<DocumentType<Comment>>;
   deleteComment(commentId: ObjectID): Promise<boolean>;
