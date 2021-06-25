@@ -191,6 +191,34 @@ describe("User data interaction suit", () => {
       expect(e).toBeInstanceOf(UserInputError);
     }
   });
+
+  test("should reject password and third party together", async () => {
+    const userLogic: UserLogic = new UserLogicImpl();
+    try {
+      const user = await userLogic.createUser({
+        ...initUser,
+        isThirdParty: true,
+      });
+      expect(true).toBeFalsy();
+    } catch (e) {
+      expect(e).toBeInstanceOf(UserInputError);
+    }
+  });
+
+  test("should reject neither password or third party", async () => {
+    const userLogic: UserLogic = new UserLogicImpl();
+    try {
+      const user = await userLogic.createUser({
+        ...initUser,
+        isThirdParty: false,
+        password: undefined
+      });
+      expect(true).toBeFalsy();
+    } catch (e) {
+      expect(e).toBeInstanceOf(UserInputError);
+    }
+  });
+
   test("should get all articles by user", async () => {
     const { article, user } = await articleCreation();
     const articleLogic: ArticleLogic = new ArticleLogicImpl();
