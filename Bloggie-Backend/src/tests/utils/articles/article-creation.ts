@@ -3,9 +3,17 @@ import ArticleLogicImpl from "@controllers/data-interaction/article/article-logi
 import { articleDependencyValidator } from "@controllers/data-interaction/article/dependency-validator";
 import UserLogic from "@controllers/data-interaction/user/user-logic";
 import UserLogicImpl from "@controllers/data-interaction/user/user-logic-impl";
+import { Article } from "@models/article/article";
 import { User } from "@models/user/user";
+import { DocumentType } from "@typegoose/typegoose";
 
-const articleCreation = async () => {
+/**
+ * create and article written by user and return both
+ */
+const articleCreation = async (): Promise<{
+  article: DocumentType<Article>;
+  user: DocumentType<User>;
+}> => {
   const commonWriter = new User();
   commonWriter.email = "email@gmail.com";
   commonWriter.firstName = "firstName";
@@ -17,10 +25,12 @@ const articleCreation = async () => {
   const userLogic: UserLogic = new UserLogicImpl();
   const user = await userLogic.createUser(commonWriter);
   const articleLogic: ArticleLogic = new ArticleLogicImpl();
+  const tempArticle = new Article();
+  tempArticle.title = TITLE;
+  tempArticle.content = content;
   const article = await articleLogic.createArticle(
     user._id,
-    TITLE,
-    content,
+    tempArticle,
     articleDependencyValidator
   );
 

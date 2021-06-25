@@ -24,7 +24,7 @@ const db = mongoose.connection;
 
 db.on("error", (error) => {
   console.error(error);
-  throw new DatabaseInfoError("Connection", "failed");
+  throw new DatabaseInfoError("Connection", error.message);
 });
 
 db.once("open", () => {

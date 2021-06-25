@@ -12,8 +12,7 @@ export default interface ArticleLogic {
   getArticleByTitle(title: string): Promise<DocumentType<Article>[]>;
   createArticle(
     authorId: ObjectID,
-    title: string,
-    content: string,
+    newData: Article,
     dependencyValidator: ArticleDependencyValidator
   ): Promise<DocumentType<Article>>;
   updateArticle(

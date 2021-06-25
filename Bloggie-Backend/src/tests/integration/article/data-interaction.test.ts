@@ -1,7 +1,7 @@
 import ArticleLogic from "@controllers/data-interaction/article/article-logic";
 import ArticleLogicImpl from "@controllers/data-interaction/article/article-logic-impl";
 import ArticleModel, { Article } from "@models/article/article";
-import CommentModel from "@models/article/comments";
+import CommentModel, { Comment } from "@models/article/comments";
 import UserModel, { User } from "@models/user/user";
 import { mongoose } from "@typegoose/typegoose";
 import UserLogic from "@controllers/data-interaction/user/user-logic-impl";
@@ -28,10 +28,13 @@ describe("Data interaction suit", () => {
     const userLogic: UserLogic = new UserLogicImpl();
     const user = await userLogic.createUser(commonWriter);
     const articleLogic: ArticleLogic = new ArticleLogicImpl();
+    const tempArticle = new Article();
+    tempArticle.title = TITLE;
+    tempArticle.content =
+      "Do proident qui eu occaecat ut velit. Cillum ut esse minim cupidatat nisi. Cillum ullamco elit nisi sunt tempor id ad incididunt dolor aliquip quis laborum ex. Fugiat eu laborum ipsum adipisicing. Veniam ut sit ullamco eu veniam esse nisi amet pariatur sit elit proident ex quis. Ea officia aute pariatur laborum officia aliquip mollit quis laborum labore. Laboris eu labore dolore dolor irure incididunt officia est.";
     const article = await articleLogic.createArticle(
       user._id,
-      TITLE,
-      "Do proident qui eu occaecat ut velit. Cillum ut esse minim cupidatat nisi. Cillum ullamco elit nisi sunt tempor id ad incididunt dolor aliquip quis laborum ex. Fugiat eu laborum ipsum adipisicing. Veniam ut sit ullamco eu veniam esse nisi amet pariatur sit elit proident ex quis. Ea officia aute pariatur laborum officia aliquip mollit quis laborum labore. Laboris eu labore dolore dolor irure incididunt officia est.",
+      tempArticle,
       articleDependencyValidator
     );
     expect(article).toBeTruthy();
@@ -41,16 +44,38 @@ describe("Data interaction suit", () => {
     expect(article.author._id).toEqual(user._id);
   });
 
+  test("should mirror _id to articleId successfully", async () => {
+    const TITLE = "This is a very big title";
+    const userLogic: UserLogic = new UserLogicImpl();
+    const user = await userLogic.createUser(commonWriter);
+    const articleLogic: ArticleLogic = new ArticleLogicImpl();
+    const tempArticle = new Article();
+    tempArticle.title = TITLE;
+    tempArticle.content =
+      "Do proident qui eu occaecat ut velit. Cillum ut esse minim cupidatat nisi. Cillum ullamco elit nisi sunt tempor id ad incididunt dolor aliquip quis laborum ex. Fugiat eu laborum ipsum adipisicing. Veniam ut sit ullamco eu veniam esse nisi amet pariatur sit elit proident ex quis. Ea officia aute pariatur laborum officia aliquip mollit quis laborum labore. Laboris eu labore dolore dolor irure incididunt officia est.";
+    const article = await articleLogic.createArticle(
+      user._id,
+      tempArticle,
+      articleDependencyValidator
+    );
+    expect(article).toBeTruthy();
+    expect(article._id).toBeTruthy();
+    expect(article._id).toEqual(article.articleId);
+  });
+
   test("should reject creating article with incorrect data", async () => {
     const TITLE = "This";
     const userLogic: UserLogic = new UserLogicImpl();
     const user = await userLogic.createUser(commonWriter);
     const articleLogic: ArticleLogic = new ArticleLogicImpl();
+    const tempArticle = new Article();
+    tempArticle.title = TITLE;
+    tempArticle.content =
+      "In dolore elit laborum id nostrud velit dolore dolore cupidatat deserunt sint velit. Exercitation culpa exercitation consequat minim deserunt eu enim commodo ea in nulla commodo. Duis voluptate ut id esse adipisicing ipsum. Eiusmod ad elit labore pariatur esse. Minim ipsum aute eu ut consectetur anim elit cupidatat aliqua nulla laborum cillum deserunt adipisicing.";
     try {
       const article = await articleLogic.createArticle(
         user._id,
-        TITLE,
-        "Do proident qui eu occaecat ut velit. Cillum ut esse minim cupidatat nisi. Cillum ullamco elit nisi sunt tempor id ad incididunt dolor aliquip quis laborum ex. Fugiat eu laborum ipsum adipisicing. Veniam ut sit ullamco eu veniam esse nisi amet pariatur sit elit proident ex quis. Ea officia aute pariatur laborum officia aliquip mollit quis laborum labore. Laboris eu labore dolore dolor irure incididunt officia est.",
+        tempArticle,
         articleDependencyValidator
       );
       expect(true).toBeFalsy();
@@ -62,10 +87,13 @@ describe("Data interaction suit", () => {
   test("should reject article when user id is invalid", async () => {
     const articleLogic: ArticleLogic = new ArticleLogicImpl();
     try {
+      const tempArticle = new Article();
+      tempArticle.content =
+        "Enim anim consequat id aliquip. Ea pariatur ad sit dolore proident cillum voluptate cupidatat deserunt amet. Duis nostrud laborum aliqua aliqua reprehenderit do non sit. Nisi elit labore proident ipsum ullamco dolor labore duis. Duis ea Lorem veniam eiusmod labore velit ut ad irure est deserunt. Aliquip reprehenderit pariatur cupidatat dolore ea ea excepteur duis in aliquip.";
+      tempArticle.title = "A very long title";
       await articleLogic.createArticle(
         new ObjectID(),
-        "Very long title",
-        "Eu mollit ex dolor adipisicing et id pariatur reprehenderit minim proident aliquip aute. Occaecat officia adipisicing et et sit occaecat nostrud voluptate. Dolore duis tempor velit excepteur Lorem magna. Ex nisi ullamco cillum dolore consectetur deserunt proident nisi labore quis.",
+        tempArticle,
         articleDependencyValidator
       );
       expect(true).toBeFalsy();
@@ -128,14 +156,14 @@ describe("Data interaction suit", () => {
   });
 
   test("should get article by id successfully", async () => {
-    const { article } = await articleCreation();
+    const { article, user } = await articleCreation();
     const articleLogic: ArticleLogic = new ArticleLogicImpl();
     const resArticle = await articleLogic.getArticleById(article._id);
     expect(article._id).toEqual(resArticle._id);
     // @ts-ignore
-    expect(article.author._id).toEqual(resArticle.author._id);
+    expect(user._id).toEqual(resArticle.author._id);
     // @ts-ignore
-    expect(article.author.firstName).toEqual(resArticle.author.firstName);
+    expect(user.firstName).toEqual(resArticle.author.firstName);
   });
 
   test("should reject getting article with invalid id", async () => {
@@ -154,11 +182,13 @@ describe("Data interaction suit", () => {
     const comments = [];
     const word = "veeeeeeeeeeeeeeeeeeeeeeery long";
     for (let i = 0; i < 4; i++) {
+      const tempComment = new Comment();
+      tempComment.content = `${word}${i + 1}`;
       comments.push(
         await commentsLogic.addComment(
           article._id,
           user._id,
-          `${word}${i + 1}`,
+          tempComment,
           commentDependencyValidator
         )
       );

@@ -14,27 +14,17 @@ export default class CommentsLogicImpl implements CommentsLogic {
   async addComment(
     articleId: ObjectID,
     authorId: ObjectID,
-    content: string,
+    newData: Comment,
     dependencyValidator: CommentDependencyValidator
   ): Promise<DocumentType<Comment>> {
     const { article, author } = await dependencyValidator(authorId, articleId);
-    const savedArticle = {
-      ...article,
-      author: author._id,
-    };
-    const comment = new Comment();
-    comment.article = article;
-    comment.author = author;
-    comment.content = content;
-    comment.date = new Date();
+    newData.article = article._id;
+    newData.author = author._id;
+    newData.date = new Date();
     let res;
     try {
-      res = await CommentModel.create({
-        article: savedArticle,
-        author,
-        content,
-        date: new Date(),
-      });
+      // @ts-ignore
+      res = await CommentModel.create(newData);
     } catch (error) {
       throw new UserInputError(error.message);
     }

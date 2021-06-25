@@ -1,8 +1,16 @@
 import { User } from "@models/user/user";
-import { getModelForClass, prop, Ref } from "@typegoose/typegoose";
+import { getModelForClass, pre, prop, Ref } from "@typegoose/typegoose";
 import { Article } from "./article";
+import { ObjectId } from "mongodb";
 
+@pre<Comment>("save", function (next) {
+  this.commentId = this._id;
+  next();
+})
 export class Comment {
+  @prop({ unique: true, index: true })
+  commentId: ObjectId;
+
   @prop({ ref: () => User, required: true })
   author: Ref<User>;
 
