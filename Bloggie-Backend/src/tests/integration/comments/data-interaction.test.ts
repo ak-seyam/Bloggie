@@ -121,11 +121,10 @@ describe("Comments data interaction test suit", () => {
     const res = await commentLogic.updateComment(comment._id, newComm);
     expect(res).toBeTruthy();
     expect(res.content).toEqual(content);
-	// @ts-ignore
+    // @ts-ignore
     expect(res.author._id).toEqual(comment.author._id);
-	// @ts-ignore
+    // @ts-ignore
     expect(res.article._id).toEqual(comment.article._id);
-
   });
 
   test("should reject updating comment with invalid length", async () => {
