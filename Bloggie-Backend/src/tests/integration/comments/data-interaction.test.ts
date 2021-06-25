@@ -16,29 +16,45 @@ describe("Comments data interaction test suit", () => {
     const { article, user } = await articleCreation();
     const commentsLogic: CommentsLogic = new CommentsLogicImpl();
     const content = "Yay! this is the best article ever!";
-	const tempComment = new Comment();
-	tempComment.content = content;
+    const tempComment = new Comment();
+    tempComment.content = content;
     const comment = await commentsLogic.addComment(
       article._id,
       user._id,
-	  tempComment,
+      tempComment,
       commentDependencyValidator
     );
     expect(comment).toBeTruthy();
     expect(comment.content).toEqual(content);
   });
 
+  test("should mirror id to commentId", async () => {
+    const { article, user } = await articleCreation();
+    const commentsLogic: CommentsLogic = new CommentsLogicImpl();
+    const content = "Yay! this is the best article ever!";
+    const tempComment = new Comment();
+    tempComment.content = content;
+    const comment = await commentsLogic.addComment(
+      article._id,
+      user._id,
+      tempComment,
+      commentDependencyValidator
+    );
+    expect(comment).toBeTruthy();
+    expect(comment._id).toEqual(comment.commentId);
+  });
+
   test("should reject creation of invalid comment", async () => {
     const { article, user } = await articleCreation();
     const commentsLogic: CommentsLogic = new CommentsLogicImpl();
     const content = "Yay!";
-	const tempComment = new Comment();
-	tempComment.content = content;
+    const tempComment = new Comment();
+    tempComment.content = content;
     try {
       const comment = await commentsLogic.addComment(
         article._id,
         user._id,
-		tempComment,
+        tempComment,
         commentDependencyValidator
       );
     } catch (e) {
@@ -50,13 +66,13 @@ describe("Comments data interaction test suit", () => {
     const { article } = await articleCreation();
     const commentsLogic: CommentsLogic = new CommentsLogicImpl();
     const content = "Yay! this is the best article ever!";
-	const tempComment = new Comment()
-	tempComment.content = content;
+    const tempComment = new Comment();
+    tempComment.content = content;
     try {
       await commentsLogic.addComment(
         article._id,
         new ObjectID(),
-		tempComment,
+        tempComment,
         commentDependencyValidator
       );
       expect(true).toBeFalsy();
@@ -69,8 +85,8 @@ describe("Comments data interaction test suit", () => {
     const { user } = await articleCreation();
     const commentsLogic: CommentsLogic = new CommentsLogicImpl();
     const content = "Yay! this is the best article ever!";
-	const tempComment = new Comment()
-	tempComment.content = content;
+    const tempComment = new Comment();
+    tempComment.content = content;
     try {
       await commentsLogic.addComment(
         new ObjectID(),
@@ -88,12 +104,12 @@ describe("Comments data interaction test suit", () => {
     const { article, user } = await articleCreation();
     const commentLogic: CommentsLogic = new CommentsLogicImpl();
     const content = "the best thing in this world!";
-	const tempComment = new Comment()
-	tempComment.content = content;
+    const tempComment = new Comment();
+    tempComment.content = content;
     const comment = await commentLogic.addComment(
       article._id,
       user._id,
-	  tempComment,
+      tempComment,
       commentDependencyValidator
     );
     const newComm = new Comment();
@@ -107,12 +123,12 @@ describe("Comments data interaction test suit", () => {
     const { article, user } = await articleCreation();
     const commentLogic: CommentsLogic = new CommentsLogicImpl();
     const content = "t";
-	const tempComment = new Comment()
-	tempComment.content = "the best thing in this world";
+    const tempComment = new Comment();
+    tempComment.content = "the best thing in this world";
     const comment = await commentLogic.addComment(
       article._id,
       user._id,
-	  tempComment,
+      tempComment,
       commentDependencyValidator
     );
     const newComm = new Comment();
@@ -139,12 +155,12 @@ describe("Comments data interaction test suit", () => {
     const { article, user } = await articleCreation();
     const commentsLogic: CommentsLogic = new CommentsLogicImpl();
     const content = "Yay! this is the best article ever!";
-	const tempComment = new Comment;
-	tempComment.content = content;
+    const tempComment = new Comment();
+    tempComment.content = content;
     const comment = await commentsLogic.addComment(
       article._id,
       user._id,
-	  tempComment,
+      tempComment,
       commentDependencyValidator
     );
     const done = await commentsLogic.deleteComment(comment._id);
@@ -167,12 +183,12 @@ describe("Comments data interaction test suit", () => {
     const { article, user } = await articleCreation();
     const commentsLogic: CommentsLogic = new CommentsLogicImpl();
     const content = "Yay! this is the best article ever!";
-	const tempComment = new Comment()
-	tempComment.content = content;
+    const tempComment = new Comment();
+    tempComment.content = content;
     const comment = await commentsLogic.addComment(
       article._id,
       user._id,
-	  tempComment,
+      tempComment,
       commentDependencyValidator
     );
     const resComment = await commentsLogic.getCommentById(comment._id);
