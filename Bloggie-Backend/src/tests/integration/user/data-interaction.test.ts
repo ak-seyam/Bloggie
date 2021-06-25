@@ -211,7 +211,7 @@ describe("User data interaction suit", () => {
       const user = await userLogic.createUser({
         ...initUser,
         isThirdParty: false,
-        password: undefined
+        password: undefined,
       });
       expect(true).toBeFalsy();
     } catch (e) {
