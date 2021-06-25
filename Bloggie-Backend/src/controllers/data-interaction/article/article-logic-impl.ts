@@ -39,7 +39,9 @@ export default class ArticleLogicImpl implements ArticleLogic {
     newData.author = author._id;
     try {
       // @ts-ignore
-      articleStored = await ArticleModel.create(newData);
+      articleStored = await (await ArticleModel.create(newData))
+        .populate("author")
+        .execPopulate();
     } catch (e) {
       throw new UserInputError(e.message);
     }

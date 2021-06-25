@@ -163,7 +163,7 @@ describe("Data interaction suit", () => {
     // @ts-ignore
     expect(user._id).toEqual(resArticle.author._id);
     // @ts-ignore
-    expect(user.firstName).toEqual(resArticle.author.firstName);
+    expect(article.author.firstName).toEqual(resArticle.author.firstName); // this also checks that creation populate all the needed information
   });
 
   test("should reject getting article with invalid id", async () => {

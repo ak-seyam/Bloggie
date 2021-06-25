@@ -24,7 +24,10 @@ export default class CommentsLogicImpl implements CommentsLogic {
     let res;
     try {
       // @ts-ignore
-      res = await CommentModel.create(newData);
+      res = await (await CommentModel.create(newData))
+        .populate("author")
+        .populate("article")
+        .execPopulate();
     } catch (error) {
       throw new UserInputError(error.message);
     }
@@ -45,7 +48,10 @@ export default class CommentsLogicImpl implements CommentsLogic {
         { _id: commentId },
         newContent,
         { new: true, runValidators: true }
-      );
+      )
+        .populate("author")
+        .populate("article")
+        .exec();
     } catch (e) {
       throw new UserInputError(e.message);
     }

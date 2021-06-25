@@ -26,6 +26,10 @@ describe("Comments data interaction test suit", () => {
     );
     expect(comment).toBeTruthy();
     expect(comment.content).toEqual(content);
+    // @ts-ignore
+    expect(comment.author._id).toEqual(user._id);
+    // @ts-ignore
+    expect(comment.article._id).toEqual(article._id);
   });
 
   test("should mirror id to commentId", async () => {
@@ -117,6 +121,11 @@ describe("Comments data interaction test suit", () => {
     const res = await commentLogic.updateComment(comment._id, newComm);
     expect(res).toBeTruthy();
     expect(res.content).toEqual(content);
+	// @ts-ignore
+    expect(res.author._id).toEqual(comment.author._id);
+	// @ts-ignore
+    expect(res.article._id).toEqual(comment.article._id);
+
   });
 
   test("should reject updating comment with invalid length", async () => {
