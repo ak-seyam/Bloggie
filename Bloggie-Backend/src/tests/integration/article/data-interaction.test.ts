@@ -1,7 +1,7 @@
 import ArticleLogic from "@controllers/data-interaction/article/article-logic";
 import ArticleLogicImpl from "@controllers/data-interaction/article/article-logic-impl";
 import ArticleModel, { Article } from "@models/article/article";
-import CommentModel from "@models/article/comments";
+import CommentModel, { Comment } from "@models/article/comments";
 import UserModel, { User } from "@models/user/user";
 import { mongoose } from "@typegoose/typegoose";
 import UserLogic from "@controllers/data-interaction/user/user-logic-impl";
@@ -182,11 +182,13 @@ describe("Data interaction suit", () => {
     const comments = [];
     const word = "veeeeeeeeeeeeeeeeeeeeeeery long";
     for (let i = 0; i < 4; i++) {
+      const tempComment = new Comment();
+      tempComment.content = `${word}${i + 1}`;
       comments.push(
         await commentsLogic.addComment(
           article._id,
           user._id,
-          `${word}${i + 1}`,
+          tempComment,
           commentDependencyValidator
         )
       );
