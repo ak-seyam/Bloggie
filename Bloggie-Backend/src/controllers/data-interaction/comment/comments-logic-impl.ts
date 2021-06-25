@@ -20,7 +20,7 @@ export default class CommentsLogicImpl implements CommentsLogic {
     const { article, author } = await dependencyValidator(authorId, articleId);
     newData.article = article._id;
     newData.author = author._id;
-    newData.date = newData.date ?? new Date();
+    newData.date = new Date();
     let res;
     try {
       // @ts-ignore
