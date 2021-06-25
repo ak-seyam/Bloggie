@@ -31,18 +31,15 @@ export default class ArticleLogicImpl implements ArticleLogic {
 
   async createArticle(
     authorId: ObjectId,
-    title: string,
-    content: string,
+    newData: Article,
     dependencyValidator: ArticleDependencyValidator
   ): Promise<DocumentType<Article>> {
     const { author } = await dependencyValidator(authorId);
     let articleStored;
+    newData.author = author._id;
     try {
-      articleStored = await ArticleModel.create({
-        author,
-        content,
-        title,
-      });
+      // @ts-ignore
+      articleStored = await ArticleModel.create(newData);
     } catch (e) {
       throw new UserInputError(e.message);
     }

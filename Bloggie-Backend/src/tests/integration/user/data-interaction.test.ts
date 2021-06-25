@@ -197,10 +197,13 @@ describe("User data interaction suit", () => {
     const articles = [];
     const word = `Very long title yes it is haha `;
     for (let i = 0; i < 3; i++) {
+      const tempArticle = new Article();
+      tempArticle.title = `${word}${i + 2}`;
+      tempArticle.content =
+        "Laboris consectetur cupidatat sit adipisicing. Incididunt ipsum sint sit officia cupidatat veniam adipisicing officia ex ut aliqua nostrud voluptate. Culpa reprehenderit anim aute ea tempor sunt. Irure dolor fugiat aliqua nisi deserunt excepteur eu irure laborum do. Et cillum veniam et enim do velit incididunt nostrud exercitation cupidatat duis aute irure cillum.";
       await articleLogic.createArticle(
         user._id,
-        `${word}${i + 2}`,
-        "Id adipisicing et Lorem eu irure ex dolor id amet est reprehenderit. Tempor quis ut eu esse ipsum id magna ullamco aliqua elit magna ea. Laboris veniam Lorem deserunt mollit deserunt. Irure quis proident culpa qui reprehenderit. Mollit duis adipisicing minim esse ullamco.",
+        tempArticle,
         articleDependencyValidator
       );
     }

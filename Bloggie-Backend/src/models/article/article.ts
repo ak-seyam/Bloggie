@@ -1,7 +1,14 @@
 import { User } from "@models/user/user";
-import { getModelForClass, prop, Ref } from "@typegoose/typegoose";
+import { getModelForClass, pre, prop, Ref } from "@typegoose/typegoose";
+import { ObjectId } from "mongodb";
 
+@pre<Article>("save", function (next) {
+  this.articleId = this._id;
+  next();
+})
 export class Article {
+  @prop({ index: true, unique: true })
+  articleId: ObjectId;
   @prop({
     required: true,
     unique: true,
