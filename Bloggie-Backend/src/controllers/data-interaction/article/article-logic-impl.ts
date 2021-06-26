@@ -1,7 +1,7 @@
 import ArticleModel, { Article } from "@models/article/article";
 import CommentModel, { Comment } from "@models/article/comments";
 import { DocumentType } from "@typegoose/typegoose";
-import UserInputError from "@utils/database/user-input-error";
+import InvalidInputError from "@utils/database/user-input-error";
 import { ObjectId } from "bson";
 import ArticleLogic from "./article-logic";
 import {
@@ -12,7 +12,7 @@ import {
 export default class ArticleLogicImpl implements ArticleLogic {
   async getArticleById(articleId: ObjectId): Promise<DocumentType<Article>> {
     const article = await ArticleModel.findById(articleId).populate("author");
-    if (!article) throw new UserInputError("Invalid article id");
+    if (!article) throw new InvalidInputError("Invalid article id");
     return article;
   }
 
@@ -43,7 +43,7 @@ export default class ArticleLogicImpl implements ArticleLogic {
         .populate("author")
         .execPopulate();
     } catch (e) {
-      throw new UserInputError(e.message);
+      throw new InvalidInputError(e.message);
     }
     return articleStored;
   }
@@ -59,9 +59,9 @@ export default class ArticleLogicImpl implements ArticleLogic {
         { new: true, runValidators: true }
       ).populate("author");
     } catch (e) {
-      throw new UserInputError(e.message);
+      throw new InvalidInputError(e.message);
     }
-    if (!res) throw new UserInputError("Invalid article id");
+    if (!res) throw new InvalidInputError("Invalid article id");
     return res;
   }
   async deleteArticle(articleId: ObjectId): Promise<boolean> {

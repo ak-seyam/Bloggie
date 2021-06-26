@@ -2,7 +2,7 @@ import UserLogic from "@controllers/data-interaction/user/user-logic";
 import ArticleModel, { Article } from "@models/article/article";
 import UserModel, { User } from "@models/user/user";
 import { DocumentType } from "@typegoose/typegoose";
-import UserInputError from "@utils/database/user-input-error";
+import InvalidInputError from "@utils/database/user-input-error";
 import { ObjectId } from "mongodb";
 
 export default class UserLogicImpl implements UserLogic {
@@ -40,9 +40,9 @@ export default class UserLogicImpl implements UserLogic {
         { new: true, runValidators: true }
       );
     } catch (e) {
-      throw new UserInputError(e.message);
+      throw new InvalidInputError(e.message);
     }
-    if (!res) throw new UserInputError("Invalid user id");
+    if (!res) throw new InvalidInputError("Invalid user id");
     return res;
   }
   async createUser(user: User): Promise<DocumentType<User>> {
@@ -50,7 +50,7 @@ export default class UserLogicImpl implements UserLogic {
     try {
       res = await UserModel.create(user);
     } catch (e) {
-      throw new UserInputError(e.message);
+      throw new InvalidInputError(e.message);
     }
     return res;
   }
@@ -60,12 +60,12 @@ export default class UserLogicImpl implements UserLogic {
   }
   async getUserById(userId: ObjectId): Promise<DocumentType<User>> {
     const res = await UserModel.findOne({ _id: userId });
-    if (!res) throw new UserInputError("Invalid user id");
+    if (!res) throw new InvalidInputError("Invalid user id");
     return res;
   }
   async getUserByEmail(email: string): Promise<DocumentType<User>> {
     const res = await UserModel.findOne({ email: email });
-    if (!res) throw new UserInputError("Email not found");
+    if (!res) throw new InvalidInputError("Email not found");
     return res;
   }
   async getUsers(
@@ -83,7 +83,7 @@ export default class UserLogicImpl implements UserLogic {
     )
       .sort({ _id: 1 })
       .limit(limit);
-    if (!res.length) throw new UserInputError("No users");
+    if (!res.length) throw new InvalidInputError("No users");
     return res;
   }
 }

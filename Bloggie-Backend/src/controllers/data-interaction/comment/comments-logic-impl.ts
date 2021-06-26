@@ -2,13 +2,13 @@ import { CommentDependencyValidator } from "@controllers/data-interaction/articl
 import CommentModel, { Comment } from "@models/article/comments";
 import UserModel from "@models/user/user";
 import { DocumentType } from "@typegoose/typegoose";
-import UserInputError from "@utils/database/user-input-error";
+import InvalidInputError from "@utils/database/user-input-error";
 import { ObjectID } from "mongodb";
 import CommentsLogic from "./comments-logic";
 export default class CommentsLogicImpl implements CommentsLogic {
   async getCommentById(commentId: ObjectID): Promise<DocumentType<Comment>> {
     const res = await CommentModel.findById(commentId);
-    if (!res) throw new UserInputError("Invalid comment id");
+    if (!res) throw new InvalidInputError("Invalid comment id");
     return res;
   }
   async addComment(
@@ -29,7 +29,7 @@ export default class CommentsLogicImpl implements CommentsLogic {
         .populate("article")
         .execPopulate();
     } catch (error) {
-      throw new UserInputError(error.message);
+      throw new InvalidInputError(error.message);
     }
     return res;
   }
@@ -53,9 +53,9 @@ export default class CommentsLogicImpl implements CommentsLogic {
         .populate("article")
         .exec();
     } catch (e) {
-      throw new UserInputError(e.message);
+      throw new InvalidInputError(e.message);
     }
-    if (!res) throw new UserInputError("Invalid comment id");
+    if (!res) throw new InvalidInputError("Invalid comment id");
     return res;
   }
 }

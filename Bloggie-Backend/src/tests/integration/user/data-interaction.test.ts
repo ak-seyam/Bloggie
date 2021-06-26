@@ -3,7 +3,7 @@ import UserLogicImpl from "@controllers/data-interaction/user/user-logic-impl";
 import UserModel, { User } from "@models/user/user";
 import mongoose from "mongoose";
 import { ObjectId } from "mongodb";
-import UserInputError from "@utils/database/user-input-error";
+import InvalidInputError from "@utils/database/user-input-error";
 import setupTeardown from "@tests/utils/data-interaction/setup-teardown";
 import articleCreation from "@tests/utils/articles/article-creation";
 import ArticleLogic from "@controllers/data-interaction/article/article-logic-impl";
@@ -52,7 +52,7 @@ describe("User data interaction suit", () => {
       });
       expect(true).toBeFalsy();
     } catch (e) {
-      expect(e).toBeInstanceOf(UserInputError);
+      expect(e).toBeInstanceOf(InvalidInputError);
     }
   });
 
@@ -80,7 +80,7 @@ describe("User data interaction suit", () => {
       await userLogic.updateUser(new ObjectId(), tempUser);
       expect(true).toBeFalsy();
     } catch (e) {
-      expect(e).toBeInstanceOf(UserInputError);
+      expect(e).toBeInstanceOf(InvalidInputError);
     }
   });
 
@@ -96,7 +96,7 @@ describe("User data interaction suit", () => {
       const newUser = await userLogic.updateUser(user._id, tempUser);
       expect(true).toBeFalsy();
     } catch (e) {
-      expect(e).toBeInstanceOf(UserInputError);
+      expect(e).toBeInstanceOf(InvalidInputError);
     }
   });
 
@@ -113,7 +113,7 @@ describe("User data interaction suit", () => {
       await userLogic.getUserById(new ObjectId());
       expect(true).toBeFalsy();
     } catch (e) {
-      expect(e).toBeInstanceOf(UserInputError);
+      expect(e).toBeInstanceOf(InvalidInputError);
     }
   });
 
@@ -132,7 +132,7 @@ describe("User data interaction suit", () => {
       await userLogic.getUserByEmail("radomText");
       expect(true).toBeFalsy();
     } catch (e) {
-      expect(e).toBeInstanceOf(UserInputError);
+      expect(e).toBeInstanceOf(InvalidInputError);
     }
   });
 
@@ -146,7 +146,7 @@ describe("User data interaction suit", () => {
       await userLogic.getUserById(user._id);
       expect(true).toBeFalsy();
     } catch (e) {
-      expect(e).toBeInstanceOf(UserInputError);
+      expect(e).toBeInstanceOf(InvalidInputError);
     }
   });
 
@@ -188,7 +188,7 @@ describe("User data interaction suit", () => {
       await userLogic.getUsers(10, new ObjectId());
       expect(true).toBeFalsy();
     } catch (e) {
-      expect(e).toBeInstanceOf(UserInputError);
+      expect(e).toBeInstanceOf(InvalidInputError);
     }
   });
 
@@ -201,7 +201,7 @@ describe("User data interaction suit", () => {
       });
       expect(true).toBeFalsy();
     } catch (e) {
-      expect(e).toBeInstanceOf(UserInputError);
+      expect(e).toBeInstanceOf(InvalidInputError);
     }
   });
 
@@ -215,7 +215,7 @@ describe("User data interaction suit", () => {
       });
       expect(true).toBeFalsy();
     } catch (e) {
-      expect(e).toBeInstanceOf(UserInputError);
+      expect(e).toBeInstanceOf(InvalidInputError);
     }
   });
 

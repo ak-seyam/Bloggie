@@ -1,7 +1,7 @@
 import ArticleModel, { Article } from "@models/article/article";
 import UserModel, { User } from "@models/user/user";
 import { DocumentType } from "@typegoose/typegoose";
-import UserInputError from "@utils/database/user-input-error";
+import InvalidInputError from "@utils/database/user-input-error";
 import { ObjectID } from "mongodb";
 
 export type CommentDependencyValidator = (
@@ -17,8 +17,8 @@ export const commentDependencyValidator: CommentDependencyValidator = async (
   articleId
 ) => {
   const author = await UserModel.findOne({ _id: authorId });
-  if (!author) throw new UserInputError("Invalid author id");
+  if (!author) throw new InvalidInputError("Invalid author id");
   const article = await ArticleModel.findOne({ _id: articleId });
-  if (!article) throw new UserInputError("Invalid article model");
+  if (!article) throw new InvalidInputError("Invalid article model");
   return { author, article };
 };

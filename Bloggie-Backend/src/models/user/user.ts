@@ -1,7 +1,7 @@
 import { prop, getModelForClass, pre } from "@typegoose/typegoose";
 import PasswordHash from "@utils/password/password-hash";
 import BcryptPasswordHash from "@utils/password/bcrypt-password-hash";
-import UserInputError from "@utils/database/user-input-error";
+import InvalidInputError from "@utils/database/user-input-error";
 import { ObjectId } from "mongodb";
 import { Field, ID, ObjectType } from "type-graphql";
 
@@ -22,7 +22,7 @@ const nameValidator = (name: string) => {
       this.password.indexOf(this.firstName) !== -1 ||
       this.password.indexOf(this.lastName) !== -1
     ) {
-      throw new UserInputError(
+      throw new InvalidInputError(
         "password cannot contain the first name or the last name"
       );
     }
@@ -34,7 +34,7 @@ const nameValidator = (name: string) => {
     !(this.password || this.isThirdParty) ||
     (this.password && this.isThirdParty)
   ) {
-    throw new UserInputError(
+    throw new InvalidInputError(
       "User must have a third party token or a password"
     );
   }

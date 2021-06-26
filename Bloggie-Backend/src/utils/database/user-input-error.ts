@@ -1,4 +1,4 @@
-export default class UserInputError extends Error {
+export default class InvalidInputError extends Error {
   constructor(message: string) {
     super(message);
     this.name = "UserInputError";
