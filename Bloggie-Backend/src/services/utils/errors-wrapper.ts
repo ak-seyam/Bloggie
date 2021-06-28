@@ -1,4 +1,3 @@
-
 export type AsyncFunction = () => Promise<any>;
 
 export async function errorsWrapper(

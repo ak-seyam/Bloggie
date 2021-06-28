@@ -3,12 +3,16 @@ import PasswordHash from "@utils/password/password-hash";
 import BcryptPasswordHash from "@utils/password/bcrypt-password-hash";
 import InvalidInputError from "@utils/database/user-input-error";
 import { ObjectId } from "mongodb";
-import { Field, ID, ObjectType } from "type-graphql";
+import { Field, ID, ObjectType, registerEnumType } from "type-graphql";
 
-enum Role {
+export enum UserRole {
   MEMBER = "member",
   ADMIN = "admin",
 }
+
+registerEnumType(UserRole, {
+  name: "UserRole",
+});
 
 const nameValidator = (name: string) => {
   return name.length > 1 && !/[^A-Za-z]/.test(name);
@@ -108,9 +112,9 @@ export class User {
   @prop()
   public isThirdParty: boolean;
 
-  @Field()
-  @prop({ enum: Role, default: Role.MEMBER })
-  public role: Role;
+  @Field(() => UserRole)
+  @prop({ enum: UserRole, default: UserRole.MEMBER })
+  public role: UserRole;
 
   @prop({ default: 0 })
   public tokenVer: number;
