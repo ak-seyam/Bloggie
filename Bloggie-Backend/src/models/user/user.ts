@@ -65,7 +65,7 @@ export class User {
     required: true,
     validate: {
       validator: (value: string) => {
-        return /[A-Za-z1-9._]+@[a-z]+\.[a-z]{2,}/.test(value);
+        return /[a-z0-9!#$%&'*+/=?^_`{|}~-]+(?:\.[a-z0-9!#$%&'*+/=?^_`{|}~-]+)*@(?:[a-z0-9](?:[a-z0-9-]*[a-z0-9])?\.)+[a-z0-9](?:[a-z0-9-]*[a-z0-9])?/.test(value);
       },
     },
   })
