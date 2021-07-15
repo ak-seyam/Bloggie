@@ -6,7 +6,7 @@ export async function errorsWrapper(
   wrappedFunction: AsyncFunction
 ) {
   try {
-    await wrappedFunction();
+    return await wrappedFunction();
   } catch (e) {
     if (e instanceof oldErrorClass) {
       throw new newError(e.message);

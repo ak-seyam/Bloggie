@@ -9,5 +9,9 @@ import { AsyncFunction, errorsWrapper } from "@services/utils/errors-wrapper";
 export async function apolloInvalidInputErrorWrapper(
   wrappedFunction: AsyncFunction
 ) {
-  await errorsWrapper(InvalidInputError, UserInputError, wrappedFunction);
+  return await errorsWrapper(
+    InvalidInputError,
+    UserInputError,
+    wrappedFunction
+  );
 }

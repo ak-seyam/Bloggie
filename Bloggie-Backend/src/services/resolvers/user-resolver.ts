@@ -1,18 +1,21 @@
 import { Max, Min } from "class-validator";
 import {
   Resolver,
-  Query,
   Mutation,
-  Authorized,
   ArgsType,
   Field,
   Int,
   Args,
   InputType,
+  Query,
 } from "type-graphql";
 import { ObjectId } from "mongodb";
 import { User } from "@models/user/user";
 import { Article } from "@models/article/article";
+import UserLogic from "@controllers/data-interaction/user/user-logic";
+import UserLogicImpl from "@controllers/data-interaction/user/user-logic-impl";
+import { DocumentType } from "@typegoose/typegoose";
+import { apolloInvalidInputErrorWrapper } from "@services/utils/graph-ql-resolvers-wrapper";
 
 @ArgsType()
 class GetArticlesArgs {
@@ -30,7 +33,7 @@ class GetArticlesArgs {
   }
 }
 
-@InputType({ description: "New user arguments" })
+@ArgsType()
 class NewUserArguments implements Partial<User> {
   @Field()
   email: string;
@@ -45,20 +48,17 @@ class NewUserArguments implements Partial<User> {
 @Resolver((of) => User)
 export default class UserResolver {
   @Mutation(() => User)
-  async login() {}
-
-  @Query(() => User)
-  @Authorized()
-  async me() {}
-
-  @Query(() => [Article]!)
-  @Authorized()
-  async getArticlesForUser(
-    @Args() { from, limit, fromAsObjectId }: GetArticlesArgs
-  ) {}
-
-  @Mutation(() => User)
   async register(
     @Args() { email, firstName, lastName, password }: NewUserArguments
-  ) {}
+  ): Promise<DocumentType<User>> {
+    return apolloInvalidInputErrorWrapper(async () => {
+      const userLogic: UserLogic = new UserLogicImpl();
+      const newUser = new User();
+      newUser.email = email;
+      newUser.firstName = firstName;
+      newUser.lastName = lastName;
+      newUser.password = password;
+      return await userLogic.createUser(newUser);
+    });
+  }
 }
