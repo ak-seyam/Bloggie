@@ -7,7 +7,7 @@ import { mongoose } from "@typegoose/typegoose";
 import UserLogic from "@controllers/data-interaction/user/user-logic-impl";
 import UserLogicImpl from "@controllers/data-interaction/user/user-logic-impl";
 import { ObjectID } from "mongodb";
-import UserInputError from "@utils/database/user-input-error";
+import InvalidInputError from "@utils/database/user-input-error";
 import { articleDependencyValidator } from "@controllers/data-interaction/article/dependency-validator";
 import CommentsLogic from "@controllers/data-interaction/comment/comments-logic-impl";
 import CommentsLogicImpl from "@controllers/data-interaction/comment/comments-logic-impl";
@@ -80,7 +80,7 @@ describe("Data interaction suit", () => {
       );
       expect(true).toBeFalsy();
     } catch (e) {
-      expect(e).toBeInstanceOf(UserInputError);
+      expect(e).toBeInstanceOf(InvalidInputError);
     }
   });
 
@@ -98,7 +98,7 @@ describe("Data interaction suit", () => {
       );
       expect(true).toBeFalsy();
     } catch (e) {
-      expect(e).toBeInstanceOf(UserInputError);
+      expect(e).toBeInstanceOf(InvalidInputError);
     }
   });
 
@@ -124,7 +124,7 @@ describe("Data interaction suit", () => {
     try {
       const result = await articleLogic.updateArticle(article._id, newArt);
     } catch (e) {
-      expect(e).toBeInstanceOf(UserInputError);
+      expect(e).toBeInstanceOf(InvalidInputError);
     }
   });
 
@@ -138,7 +138,7 @@ describe("Data interaction suit", () => {
       await articleLogic.updateArticle(new ObjectID(), newArt);
       expect(true).toBeFalsy();
     } catch (e) {
-      expect(e).toBeInstanceOf(UserInputError);
+      expect(e).toBeInstanceOf(InvalidInputError);
     }
   });
 
@@ -163,7 +163,7 @@ describe("Data interaction suit", () => {
     // @ts-ignore
     expect(user._id).toEqual(resArticle.author._id);
     // @ts-ignore
-    expect(user.firstName).toEqual(resArticle.author.firstName);
+    expect(article.author.firstName).toEqual(resArticle.author.firstName); // this also checks that creation populate all the needed information
   });
 
   test("should reject getting article with invalid id", async () => {
@@ -172,7 +172,7 @@ describe("Data interaction suit", () => {
       await articleLogic.getArticleById(new ObjectID());
       expect(true).toBeFalsy();
     } catch (e) {
-      expect(e).toBeInstanceOf(UserInputError);
+      expect(e).toBeInstanceOf(InvalidInputError);
     }
   });
 

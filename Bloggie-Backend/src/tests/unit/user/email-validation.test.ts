@@ -26,6 +26,9 @@ describe("Email is correct suit", () => {
   test("should accept valid email", async () => {
     await testLogic("email@gmail.com", true);
   });
+  test("should accept valid email including dots", async () => {
+    await testLogic("abdullah.khaled.alamal0@gmail.com", true);
+  });
   test("should reject invalid email special character in domain", async () => {
     await testLogic("email@g!mail.com");
   });

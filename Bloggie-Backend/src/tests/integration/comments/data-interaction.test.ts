@@ -7,7 +7,7 @@ import UserModel from "@models/user/user";
 import articleCreation from "@tests/utils/articles/article-creation";
 import setupTeardown from "@tests/utils/data-interaction/setup-teardown";
 import { mongoose } from "@typegoose/typegoose";
-import UserInputError from "@utils/database/user-input-error";
+import InvalidInputError from "@utils/database/user-input-error";
 import { ObjectID } from "mongodb";
 
 describe("Comments data interaction test suit", () => {
@@ -26,6 +26,10 @@ describe("Comments data interaction test suit", () => {
     );
     expect(comment).toBeTruthy();
     expect(comment.content).toEqual(content);
+    // @ts-ignore
+    expect(comment.author._id).toEqual(user._id);
+    // @ts-ignore
+    expect(comment.article._id).toEqual(article._id);
   });
 
   test("should mirror id to commentId", async () => {
@@ -58,7 +62,7 @@ describe("Comments data interaction test suit", () => {
         commentDependencyValidator
       );
     } catch (e) {
-      expect(e).toBeInstanceOf(UserInputError);
+      expect(e).toBeInstanceOf(InvalidInputError);
     }
   });
 
@@ -77,7 +81,7 @@ describe("Comments data interaction test suit", () => {
       );
       expect(true).toBeFalsy();
     } catch (e) {
-      expect(e).toBeInstanceOf(UserInputError);
+      expect(e).toBeInstanceOf(InvalidInputError);
     }
   });
 
@@ -96,7 +100,7 @@ describe("Comments data interaction test suit", () => {
       );
       expect(true).toBeFalsy();
     } catch (e) {
-      expect(e).toBeInstanceOf(UserInputError);
+      expect(e).toBeInstanceOf(InvalidInputError);
     }
   });
 
@@ -117,6 +121,10 @@ describe("Comments data interaction test suit", () => {
     const res = await commentLogic.updateComment(comment._id, newComm);
     expect(res).toBeTruthy();
     expect(res.content).toEqual(content);
+    // @ts-ignore
+    expect(res.author._id).toEqual(comment.author._id);
+    // @ts-ignore
+    expect(res.article._id).toEqual(comment.article._id);
   });
 
   test("should reject updating comment with invalid length", async () => {
@@ -136,7 +144,7 @@ describe("Comments data interaction test suit", () => {
     try {
       const res = await commentLogic.updateComment(comment._id, newComm);
     } catch (e) {
-      expect(e).toBeInstanceOf(UserInputError);
+      expect(e).toBeInstanceOf(InvalidInputError);
     }
   });
 
@@ -147,7 +155,7 @@ describe("Comments data interaction test suit", () => {
       newComm.content = "very long comment but it doesn't matter";
       await commentLogic.updateComment(new ObjectID(), newComm);
     } catch (e) {
-      expect(e).toBeInstanceOf(UserInputError);
+      expect(e).toBeInstanceOf(InvalidInputError);
     }
   });
 
@@ -169,7 +177,7 @@ describe("Comments data interaction test suit", () => {
       const c = await commentsLogic.getCommentById(comment._id);
       expect(true).toBeFalsy();
     } catch (e) {
-      expect(e).toBeInstanceOf(UserInputError);
+      expect(e).toBeInstanceOf(InvalidInputError);
     }
   });
 
@@ -205,7 +213,7 @@ describe("Comments data interaction test suit", () => {
       await commentLogic.getCommentById(new ObjectID());
       expect(true).toBeFalsy();
     } catch (e) {
-      expect(e).toBeInstanceOf(UserInputError);
+      expect(e).toBeInstanceOf(InvalidInputError);
     }
   });
 });
