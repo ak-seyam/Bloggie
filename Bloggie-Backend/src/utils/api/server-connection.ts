@@ -18,6 +18,8 @@ export async function startingServer(port: number) {
 }
 
 export async function teardownServer() {
-  server.stop();
+  await server.stop();
+  console.log("GraphQL Server stopped");
   httpServer.close();
+  console.log("Http Server stopped");
 }
