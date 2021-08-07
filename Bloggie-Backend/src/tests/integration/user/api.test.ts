@@ -1,4 +1,7 @@
-import { verifyAccessToken } from "@services/utils/JWT-providers";
+import {
+  verifyAccessToken,
+  verifyRefreshToken,
+} from "@services/utils/JWT-providers";
 import setupTeardownGraphQL_API from "@tests/utils/api/setup-teardown";
 import axios from "axios";
 
@@ -22,7 +25,6 @@ describe("User API Test suite", () => {
 			`,
       })
       .then((response) => [response.data, response.headers]);
-    console.log(res);
     expect(res.data).toBeTruthy();
     expect(res.data.register).toBeTruthy();
     expect(res.data.register.success).toBeTruthy();
@@ -30,5 +32,31 @@ describe("User API Test suite", () => {
     expect(
       verifyAccessToken(res.data.register.accessToken.split("Bearer ")[1])
     ).toBeTruthy();
+    // checking the headers
+    const [rid, path, httpOnly] = headers["set-cookie"][0].split("; ");
+    expect(verifyRefreshToken(rid.split("rid=Bearer%20")[1])).toBeTruthy();
+    expect(path.split("=")[1]).toEqual("/");
+    expect(httpOnly.toUpperCase()).toEqual("HTTPONLY");
+  });
+  test("should reject invalid user fields", async () => {
+    const data = await axios
+      .post(`http://localhost:${PORT}/graphql`, {
+        query: `
+			mutation registerInvalid {
+			  register(
+			    email: "eail@b!.b"
+			    firstName: "asd"
+			    lastName: "wadswasd"
+			    password: "wsS0!123CSCS787"
+			  ) {
+			    accessToken
+			  }
+			}
+			`,
+      })
+      .then((res) => res.data);
+
+    expect(data.errors).toBeTruthy();
+    expect(data.errors[0].message.indexOf("email")).not.toEqual(-1);
   });
 });
