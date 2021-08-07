@@ -29,9 +29,7 @@ describe("User API Test suite", () => {
     expect(res.data.register).toBeTruthy();
     expect(res.data.register.success).toBeTruthy();
     expect(res.data.register.accessToken).toBeTruthy();
-    expect(
-      verifyAccessToken(res.data.register.accessToken)
-    ).toBeTruthy();
+    expect(verifyAccessToken(res.data.register.accessToken)).toBeTruthy();
     // checking the headers
     const [rid, path, httpOnly] = headers["set-cookie"][0].split("; ");
     expect(verifyRefreshToken(rid.split("rid=")[1])).toBeTruthy();
