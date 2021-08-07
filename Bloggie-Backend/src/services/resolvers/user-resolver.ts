@@ -32,21 +32,21 @@ import { MongooseDocument } from "mongoose";
 import isAuth from "./middleware/auth";
 import PayloadContext from "@services/contexts/user-cotext";
 
-@ArgsType()
-class GetArticlesArgs {
-  @Field(() => Int)
-  @Min(1)
-  @Max(50)
-  limit: number = 10;
+// @ArgsType()
+// class GetArticlesArgs {
+//   @Field(() => Int)
+//   @Min(1)
+//   @Max(50)
+//   limit: number = 10;
 
-  @Field(() => String, { nullable: true })
-  from: string;
+//   @Field(() => String, { nullable: true })
+//   from: string;
 
-  get fromAsObjectId() {
-    if (!this.from) return undefined;
-    return new ObjectId(this.from);
-  }
-}
+//   get fromAsObjectId() {
+//     if (!this.from) return undefined;
+//     return new ObjectId(this.from);
+//   }
+// }
 
 @ArgsType()
 class LoginArguments {
@@ -144,7 +144,7 @@ export default class UserResolver {
       const userLogic: UserLogic = new UserLogicImpl();
       const user = await userLogic.getUserByEmail(email);
       if (!user) {
-        throw new InvalidAuthenticationStateError("email not found");
+        throw new InvalidAuthenticationStateError("Email not found");
       }
       if (!user.password) {
         throw new InvalidAuthenticationStateError(
