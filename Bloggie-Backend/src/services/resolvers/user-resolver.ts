@@ -27,7 +27,7 @@ import {
 import { ExpressContext } from "apollo-server-express";
 import PasswordHash from "@utils/password/password-hash";
 import BcryptPasswordHash from "@utils/password/bcrypt-password-hash";
-import InvalidAuthenticationStateError from "@utils/api/access-errors";
+import { InvalidAuthenticationStateError } from "@utils/api/access-errors";
 import { Response } from "express";
 import { MongooseDocument, Types } from "mongoose";
 import isAuth from "./middleware/auth";
