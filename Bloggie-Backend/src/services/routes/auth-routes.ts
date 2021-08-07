@@ -4,7 +4,7 @@ import { RefreshTokenMiddleware } from "./middleware/refresh-token-middleware";
 
 const router = Router();
 
-router.post("/refresh_token", RefreshTokenMiddleware, (req, res) => {
+router.get("/refresh_token", RefreshTokenMiddleware, (_, res) => {
   res.send(res.locals.accessTokenRes);
 });
 

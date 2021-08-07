@@ -278,4 +278,57 @@ describe("User API Test suite", () => {
       -1
     );
   });
+  test("should refresh token successfully", async () => {
+    const email = "valid@email.com";
+    const password = "Valid123@&PA$word";
+    // create the user
+    const userLogic: UserLogic = new UserLogicImpl();
+    const newUser = new User();
+    newUser.email = email;
+    newUser.password = password;
+    newUser.firstName = "first";
+    newUser.lastName = "last";
+    newUser.isThirdParty = false;
+    newUser.role = UserRole.MEMBER;
+    newUser.tokenVer = 1;
+    await userLogic.createUser(newUser);
+
+    const [res, loginHeader] = await axios
+      .post(`http://localhost:${PORT}/graphql`, {
+        query: `
+			mutation loggingAUser {
+			  login(
+			    email: "${email}"
+			    password: "${password}"
+			  ) {
+			    accessToken,
+					success
+			  }
+			}
+			`,
+      })
+      .then((res) => [res.data, res.headers]);
+    const [refreshToken, _path, _httpOnly] =
+      loginHeader["set-cookie"][0].split("; ");
+    const accessToken = res.data.login.accessToken;
+    const [data, headers] = await axios
+      .get(
+        `http://localhost:${PORT}/auth/refresh_token`,
+
+        {
+          headers: {
+            Authorization: `Bearer ${accessToken}`,
+            Cookie: `rid=${refreshToken}`,
+          },
+        }
+      )
+      .then((res) => [res.data, res.headers]);
+    expect(data.accessToken).toBeTruthy();
+    expect(verifyAccessToken(data.accessToken)).toBeTruthy();
+    // checking headers
+    const [rid, path, httpOnly] = headers["set-cookie"][0].split("; ");
+    expect(await verifyRefreshToken(rid.split("rid=")[1])).toBeTruthy();
+    expect(path.split("=")[1]).toEqual("/");
+    expect(httpOnly.toUpperCase()).toEqual("HTTPONLY");
+  });
 });
