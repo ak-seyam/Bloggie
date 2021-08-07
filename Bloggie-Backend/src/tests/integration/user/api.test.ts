@@ -133,7 +133,7 @@ describe("User API Test suite", () => {
     expect(data.errors).toBeTruthy();
     expect(data.errors[0].message.indexOf("another")).not.toEqual(-1);
   });
-  test("should get user id", async () => {
+  test("[what is my id] should get user id", async () => {
     const email = "valid@email.com";
     const password = "Valid123@&PA$word";
     // create the user
@@ -185,5 +185,22 @@ describe("User API Test suite", () => {
       .then((res) => res.data)
       .then((content) => content.data);
     expect(whoAmIRes.whatIsMyId.id).toBeTruthy();
+  });
+  test("[what is my id] should reject requests with no authorization header", async () => {
+    const whoAmIRes = await axios
+      .post(`http://localhost:${PORT}/graphql`, {
+        query: `
+			query wimi {
+				whatIsMyId {
+					id
+				}
+			}
+		`,
+      })
+      .then((res) => res.data);
+    console.log("message", whoAmIRes.errors[0].message);
+    expect(
+      whoAmIRes.errors[0].message.indexOf("authorization header is not defined")
+    ).not.toEqual(-1);
   });
 });

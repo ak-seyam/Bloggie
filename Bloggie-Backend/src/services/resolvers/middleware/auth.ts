@@ -10,7 +10,7 @@ const isAuth: MiddlewareFn<ExpressContext & PayloadContext> = (
 ) => {
   if (!context.req.headers.authorization) {
     throw new InvalidAuthenticationStateError(
-      "authorization error is not defined"
+      "authorization header is not defined"
     );
   }
   const accessToken = context.req.headers.authorization?.split(" ")[1];
