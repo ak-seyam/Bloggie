@@ -9,7 +9,11 @@ import {
 
 export default interface ArticleLogic {
   getArticleById(articleId: ObjectID): Promise<DocumentType<Article>>;
-  getArticleByTitle(title: string): Promise<DocumentType<Article>[]>;
+  getArticlesByTitle(
+    title: string,
+    limit?: number,
+    from?: string
+  ): Promise<DocumentType<Article>[]>;
   createArticle(
     authorId: ObjectID,
     newData: Article,

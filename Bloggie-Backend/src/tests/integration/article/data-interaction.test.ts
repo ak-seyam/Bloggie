@@ -212,7 +212,7 @@ describe("Data interaction suit", () => {
   test("should get an article by title if it exist", async () => {
     const { article } = await articleCreation();
     const articleLogic: ArticleLogic = new ArticleLogicImpl();
-    const resArticle = await articleLogic.getArticleByTitle(article.title);
+    const resArticle = await articleLogic.getArticlesByTitle(article.title);
     expect(resArticle[0].title).toEqual(article.title);
     // @ts-ignore
     expect(resArticle[0].author._id).toEqual(article.author._id);
@@ -221,7 +221,7 @@ describe("Data interaction suit", () => {
   test("should get an article by similar title if it exist", async () => {
     const { article } = await articleCreation();
     const articleLogic: ArticleLogic = new ArticleLogicImpl();
-    const resArticle = await articleLogic.getArticleByTitle(
+    const resArticle = await articleLogic.getArticlesByTitle(
       article.title.toUpperCase().slice(0, article.title.length - 2)
     );
     expect(resArticle[0].title).toEqual(article.title);
@@ -232,7 +232,7 @@ describe("Data interaction suit", () => {
   test("should reject invalid titles", async () => {
     const { article } = await articleCreation();
     const articleLogic: ArticleLogic = new ArticleLogicImpl();
-    const resArt = await articleLogic.getArticleByTitle("tjdklff;asdfajlj");
+    const resArt = await articleLogic.getArticlesByTitle("tjdklff;asdfajlj");
     expect(resArt.length).toEqual(0);
   });
 });
