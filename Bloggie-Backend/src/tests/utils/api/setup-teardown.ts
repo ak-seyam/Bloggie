@@ -20,9 +20,9 @@ export default function setupTeardownGraphQL_API() {
     await UserModel.remove({});
     await ArticleModel.remove({});
     await CommentModel.remove({});
-    await teardownServer();
   });
   afterAll(async () => {
+    await teardownServer();
     mongoose.disconnect();
   });
   return port;
