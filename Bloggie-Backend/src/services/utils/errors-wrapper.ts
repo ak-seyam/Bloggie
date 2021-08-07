@@ -1,9 +1,9 @@
-export type AsyncFunction = () => Promise<any>;
+export type AsyncFunction<T> = () => Promise<T>;
 
-export async function errorsWrapper(
+export async function errorsWrapper<T>(
   oldErrorClass: any,
   newError: any,
-  wrappedFunction: AsyncFunction
+  wrappedFunction: AsyncFunction<T>
 ) {
   try {
     return await wrappedFunction();

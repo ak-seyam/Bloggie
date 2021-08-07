@@ -13,20 +13,22 @@ interface TimeFormat {
 }
 
 function signToken(secret: string, payload: UserPayload, exp: TimeFormat) {
-  return sign(payload, secret, { expiresIn: `${exp.amount}${exp.unit}` });
+  return `Bearer ${sign(payload, secret, {
+    expiresIn: `${exp.amount}${exp.unit}`,
+  })}`;
 }
 
 export function signRefreshToken(payload: UserPayload) {
   return signToken(process.env["REFRESH_TOKEN_SECRET"]!, payload, {
-    amount: 15,
-    unit: "m",
+    amount: 1,
+    unit: "y",
   });
 }
 
 export function signAccessToken(payload: UserPayload) {
   return signToken(process.env["ACCESS_TOKEN_SECRET"]!, payload, {
-    amount: 1,
-    unit: "y",
+    amount: 15,
+    unit: "m",
   });
 }
 

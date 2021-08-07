@@ -6,8 +6,8 @@ import { AsyncFunction, errorsWrapper } from "@services/utils/errors-wrapper";
  * a wrapper that replace with error with suitable GraphQL errors
  * @param originalError your error type
  */
-export async function apolloInvalidInputErrorWrapper(
-  wrappedFunction: AsyncFunction
+export async function apolloInvalidInputErrorWrapper<T>(
+  wrappedFunction: AsyncFunction<T>
 ) {
   return await errorsWrapper(
     InvalidInputError,
