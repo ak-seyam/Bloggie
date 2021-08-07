@@ -11,6 +11,7 @@ import {
   ObjectType,
   Ctx,
   UseMiddleware,
+  Arg,
 } from "type-graphql";
 import { ObjectId } from "mongodb";
 import { User, UserRole } from "@models/user/user";
@@ -28,25 +29,21 @@ import PasswordHash from "@utils/password/password-hash";
 import BcryptPasswordHash from "@utils/password/bcrypt-password-hash";
 import InvalidAuthenticationStateError from "@utils/api/access-errors";
 import { Response } from "express";
-import { MongooseDocument } from "mongoose";
+import { MongooseDocument, Types } from "mongoose";
 import isAuth from "./middleware/auth";
 import PayloadContext from "@services/contexts/user-cotext";
 
-// @ArgsType()
-// class GetArticlesArgs {
-//   @Field(() => Int)
-//   @Min(1)
-//   @Max(50)
-//   limit: number = 10;
-
-//   @Field(() => String, { nullable: true })
-//   from: string;
-
-//   get fromAsObjectId() {
-//     if (!this.from) return undefined;
-//     return new ObjectId(this.from);
-//   }
-// }
+@ObjectType()
+class UserContent implements Partial<User> {
+  @Field()
+  email: string;
+  @Field()
+  firstName: string;
+  @Field()
+  lastName: string;
+  @Field(() => [Article])
+  articles: Array<Article>;
+}
 
 @ArgsType()
 class LoginArguments {
@@ -57,7 +54,7 @@ class LoginArguments {
 }
 
 @ArgsType()
-class NewUserArguments implements Partial<User> {
+class UserProperties implements Partial<User> {
   @Field()
   email: string;
   @Field()
@@ -114,7 +111,7 @@ export const tokenGeneration = (
 export default class UserResolver {
   @Mutation(() => RegisterResponse)
   async register(
-    @Args() { email, firstName, lastName, password }: NewUserArguments,
+    @Args() { email, firstName, lastName, password }: UserProperties,
     @Ctx() context: ExpressContext
   ): Promise<RegisterResponse> {
     return apolloErrorsWrapper<RegisterResponse>(async () => {
@@ -164,6 +161,27 @@ export default class UserResolver {
   whatIsMyId(@Ctx() context: PayloadContext): WhatIsMyIdRes {
     return {
       id: context.payload.iss!,
+    };
+  }
+  @Query(() => UserContent)
+  async user(
+    @Arg("id") id: string,
+    @Arg("articles_limit", { nullable: true, defaultValue: 5 }) limit: number,
+    @Arg("articles_starter_id", { nullable: true }) articlesStarterId: string
+  ): Promise<UserContent> {
+    const userLogic: UserLogic = new UserLogicImpl();
+    const user = await userLogic.getUserById(Types.ObjectId(id));
+    console.log("the user is", user);
+    const articles = await userLogic.getArticlesByUser(
+      user._id,
+      limit,
+      articlesStarterId ? Types.ObjectId(articlesStarterId) : undefined
+    );
+    return {
+      email: user.email,
+      firstName: user.firstName,
+      lastName: user.lastName,
+      articles,
     };
   }
 }

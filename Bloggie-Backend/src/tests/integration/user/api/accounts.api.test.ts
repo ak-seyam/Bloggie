@@ -8,7 +8,7 @@ import UserLogic from "@controllers/data-interaction/user/user-logic";
 import UserLogicImpl from "@controllers/data-interaction/user/user-logic-impl";
 import { User, UserRole } from "@models/user/user";
 
-describe("User API Test suite", () => {
+describe("User Accounts API Test suite", () => {
   const PORT = setupTeardownGraphQL_API();
   test("should create user successfully", async () => {
     const [res, headers] = await axios
