@@ -4,7 +4,7 @@ import InvalidAuthenticationStateError from "@utils/api/access-errors";
 import { ExpressContext } from "apollo-server-express";
 import { MiddlewareFn } from "type-graphql";
 
-const isAuth: MiddlewareFn<ExpressContext & PayloadContext> = (
+const isAuth: MiddlewareFn<ExpressContext & PayloadContext> = async (
   { context },
   next
 ) => {
@@ -16,7 +16,7 @@ const isAuth: MiddlewareFn<ExpressContext & PayloadContext> = (
   const accessToken = context.req.headers.authorization?.split(" ")[1];
   // check if the token is correct
   try {
-    const payload = verifyAccessToken(accessToken);
+    const payload = await verifyAccessToken(accessToken);
     context.payload = payload;
   } catch (e) {
     console.error(e);

@@ -32,10 +32,10 @@ describe("User API Test suite", () => {
     expect(res.data.register).toBeTruthy();
     expect(res.data.register.success).toBeTruthy();
     expect(res.data.register.accessToken).toBeTruthy();
-    expect(verifyAccessToken(res.data.register.accessToken)).toBeTruthy();
+    expect(await verifyAccessToken(res.data.register.accessToken)).toBeTruthy();
     // checking the headers
     const [rid, path, httpOnly] = headers["set-cookie"][0].split("; ");
-    expect(verifyRefreshToken(rid.split("rid=")[1])).toBeTruthy();
+    expect(await verifyRefreshToken(rid.split("rid=")[1])).toBeTruthy();
     expect(path.split("=")[1]).toEqual("/");
     expect(httpOnly.toUpperCase()).toEqual("HTTPONLY");
   });
@@ -94,10 +94,10 @@ describe("User API Test suite", () => {
     expect(res.data.login).toBeTruthy();
     expect(res.data.login.success).toBeTruthy();
     expect(res.data.login.accessToken).toBeTruthy();
-    expect(verifyAccessToken(res.data.login.accessToken)).toBeTruthy();
+    expect(await verifyAccessToken(res.data.login.accessToken)).toBeTruthy();
     // checking the headers
     const [rid, path, httpOnly] = headers["set-cookie"][0].split("; ");
-    expect(verifyRefreshToken(rid.split("rid=")[1])).toBeTruthy();
+    expect(await verifyRefreshToken(rid.split("rid=")[1])).toBeTruthy();
     expect(path.split("=")[1]).toEqual("/");
     expect(httpOnly.toUpperCase()).toEqual("HTTPONLY");
   });

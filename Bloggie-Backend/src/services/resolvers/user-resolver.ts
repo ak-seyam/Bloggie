@@ -82,7 +82,7 @@ class RegisterResponse {
   accessToken?: string;
 }
 
-const tokenGeneration = (
+export const tokenGeneration = (
   id: MongooseDocument["_id"],
   role: UserRole,
   tokenVer: number,
