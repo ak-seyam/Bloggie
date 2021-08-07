@@ -1,6 +1,13 @@
-export default class InvalidAuthenticationStateError extends Error {
+export class InvalidAuthenticationStateError extends Error {
   constructor(message: string) {
     super(message);
-    this.name = "InvalidInputError";
+    this.name = "InvalidAuthenticationStateError";
+  }
+}
+
+export class InvalidAuthorizationRoleError extends Error {
+  constructor(message: string) {
+    super(message);
+    this.name = "InvalidAuthorizationRoleError";
   }
 }

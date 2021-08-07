@@ -1,6 +1,5 @@
 import { tokenGeneration } from "@services/resolvers/user-resolver";
 import {
-  signAccessToken,
   verifyAccessToken,
   verifyRefreshToken,
 } from "@services/utils/JWT-providers";

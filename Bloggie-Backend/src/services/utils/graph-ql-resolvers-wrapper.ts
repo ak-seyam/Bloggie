@@ -1,20 +1,21 @@
 import InvalidInputError from "@utils/api/user-input-error";
-import { AuthenticationError, UserInputError } from "apollo-server";
+import {
+  AuthenticationError,
+  ForbiddenError,
+  UserInputError,
+} from "apollo-server";
 import { AsyncFunction, errorsWrapper } from "@services/utils/errors-wrapper";
-import InvalidAuthenticationStateError from "@utils/api/access-errors";
+import {
+  InvalidAuthenticationStateError,
+  InvalidAuthorizationRoleError,
+} from "@utils/api/access-errors";
 
 /**
  * @description a wrapper that replace with error with suitable GraphQL errors
  * @param originalError your error type
  */
-async function apolloInvalidInputErrorWrapper<T>(
-  wrappedFunction: AsyncFunction<T>
-) {
-  return await errorsWrapper(
-    InvalidInputError,
-    UserInputError,
-    wrappedFunction
-  );
+function apolloInvalidInputErrorWrapper<T>(wrappedFunction: AsyncFunction<T>) {
+  return errorsWrapper(InvalidInputError, UserInputError, wrappedFunction);
 }
 
 /**
@@ -29,6 +30,14 @@ function apolloUnauthenticatedWrapper<T>(wrappedFunction: AsyncFunction<T>) {
     wrappedFunction
   );
 }
+
+function apolloUnauthorizedWrapper<T>(wrappedFunction: AsyncFunction<T>) {
+  return errorsWrapper(
+    InvalidAuthorizationRoleError,
+    ForbiddenError,
+    wrappedFunction
+  );
+}
 /**
  * @description a wrapper used to wrap apollo logic functions
  * @param wrappedFunction the logic function that needs to be caught for error
@@ -40,6 +49,8 @@ export async function apolloErrorsWrapper<T>(
   // editing guide for my future self
   // replace the wrapped function with another wrapper that takes the wrapped function
   return await apolloUnauthenticatedWrapper<T>(
-    await apolloInvalidInputErrorWrapper<T>(wrappedFunction)
+    apolloInvalidInputErrorWrapper<T>(
+      apolloUnauthorizedWrapper<T>(wrappedFunction)
+    )
   )();
 }

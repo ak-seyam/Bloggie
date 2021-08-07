@@ -1,6 +1,6 @@
 import PayloadContext from "@services/contexts/user-cotext";
 import { verifyAccessToken } from "@services/utils/JWT-providers";
-import InvalidAuthenticationStateError from "@utils/api/access-errors";
+import { InvalidAuthenticationStateError } from "@utils/api/access-errors";
 import { ExpressContext } from "apollo-server-express";
 import { MiddlewareFn } from "type-graphql";
 
