@@ -1,7 +1,7 @@
 import ArticleModel, { Article } from "@models/article/article";
 import UserModel, { User } from "@models/user/user";
 import { DocumentType } from "@typegoose/typegoose";
-import InvalidInputError from "@utils/database/user-input-error";
+import InvalidInputError from "@utils/api/user-input-error";
 import { ObjectID } from "mongodb";
 
 export type CommentDependencyValidator = (

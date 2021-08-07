@@ -3,7 +3,7 @@ import UserLogicImpl from "@controllers/data-interaction/user/user-logic-impl";
 import UserModel, { User } from "@models/user/user";
 import mongoose from "mongoose";
 import { ObjectId } from "mongodb";
-import InvalidInputError from "@utils/database/user-input-error";
+import InvalidInputError from "@utils/api/user-input-error";
 import setupTeardown from "@tests/utils/data-interaction/setup-teardown";
 import articleCreation from "@tests/utils/articles/article-creation";
 import ArticleLogic from "@controllers/data-interaction/article/article-logic-impl";

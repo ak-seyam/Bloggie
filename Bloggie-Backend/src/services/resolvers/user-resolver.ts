@@ -17,7 +17,7 @@ import { Article } from "@models/article/article";
 import UserLogic from "@controllers/data-interaction/user/user-logic";
 import UserLogicImpl from "@controllers/data-interaction/user/user-logic-impl";
 import { DocumentType } from "@typegoose/typegoose";
-import { apolloInvalidInputErrorWrapper } from "@services/utils/graph-ql-resolvers-wrapper";
+import { apolloErrorsWrapper } from "@services/utils/graph-ql-resolvers-wrapper";
 import {
   signAccessToken,
   signRefreshToken,
@@ -67,7 +67,7 @@ export default class UserResolver {
     @Args() { email, firstName, lastName, password }: NewUserArguments,
     @Ctx() context: ExpressContext
   ): Promise<RegisterResponse> {
-    return apolloInvalidInputErrorWrapper<RegisterResponse>(async () => {
+    return apolloErrorsWrapper<RegisterResponse>(async () => {
       const userLogic: UserLogic = new UserLogicImpl();
       const _newUser = new User();
       _newUser.email = email;

@@ -1,7 +1,7 @@
 import ArticleModel, { Article } from "@models/article/article";
 import CommentModel, { Comment } from "@models/article/comments";
 import { DocumentType } from "@typegoose/typegoose";
-import InvalidInputError from "@utils/database/user-input-error";
+import InvalidInputError from "@utils/api/user-input-error";
 import { ObjectId } from "bson";
 import ArticleLogic from "./article-logic";
 import {

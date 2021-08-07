@@ -7,7 +7,7 @@ import { mongoose } from "@typegoose/typegoose";
 import UserLogic from "@controllers/data-interaction/user/user-logic-impl";
 import UserLogicImpl from "@controllers/data-interaction/user/user-logic-impl";
 import { ObjectID } from "mongodb";
-import InvalidInputError from "@utils/database/user-input-error";
+import InvalidInputError from "@utils/api/user-input-error";
 import { articleDependencyValidator } from "@controllers/data-interaction/article/dependency-validator";
 import CommentsLogic from "@controllers/data-interaction/comment/comments-logic-impl";
 import CommentsLogicImpl from "@controllers/data-interaction/comment/comments-logic-impl";
