@@ -21,7 +21,7 @@ describe("User API Test suite", () => {
 				}	
 			`,
       })
-      .then((res) => [res.data, res.headers]);
+      .then((response) => [response.data, response.headers]);
     console.log(res);
     expect(res.data).toBeTruthy();
     expect(res.data.register).toBeTruthy();
