@@ -13,9 +13,9 @@ interface TimeFormat {
 }
 
 function signToken(secret: string, payload: UserPayload, exp: TimeFormat) {
-  return `Bearer ${sign(payload, secret, {
+  return sign(payload, secret, {
     expiresIn: `${exp.amount}${exp.unit}`,
-  })}`;
+  });
 }
 
 export function signRefreshToken(payload: UserPayload) {
