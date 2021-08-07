@@ -19,10 +19,8 @@ const isAuth: MiddlewareFn<ExpressContext & PayloadContext> = (
     const payload = verifyAccessToken(accessToken);
     context.payload = payload;
   } catch (e) {
-    if (e.message) {
-      throw new InvalidAuthenticationStateError(e.message);
-    }
     console.error(e);
+    throw new InvalidAuthenticationStateError("Invalid token");
   }
   // get the user from the database
   return next();
