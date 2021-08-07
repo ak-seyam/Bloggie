@@ -4,6 +4,9 @@ import {
 } from "@services/utils/JWT-providers";
 import setupTeardownGraphQL_API from "@tests/utils/api/setup-teardown";
 import axios from "axios";
+import UserLogic from "@controllers/data-interaction/user/user-logic";
+import UserLogicImpl from "@controllers/data-interaction/user/user-logic-impl";
+import { User, UserRole } from "@models/user/user";
 
 describe("User API Test suite", () => {
   const PORT = setupTeardownGraphQL_API();
@@ -56,5 +59,131 @@ describe("User API Test suite", () => {
 
     expect(data.errors).toBeTruthy();
     expect(data.errors[0].message.indexOf("email")).not.toEqual(-1);
+  });
+  test("should login successfully", async () => {
+    const email = "valid@email.com";
+    const password = "Valid123@&PA$word";
+    // create the user
+    const userLogic: UserLogic = new UserLogicImpl();
+    const newUser = new User();
+    newUser.email = email;
+    newUser.password = password;
+    newUser.firstName = "first";
+    newUser.lastName = "last";
+    newUser.isThirdParty = false;
+    newUser.role = UserRole.MEMBER;
+    newUser.tokenVer = 1;
+    await userLogic.createUser(newUser);
+    // login
+    const [res, headers] = await axios
+      .post(`http://localhost:${PORT}/graphql`, {
+        query: `
+			mutation loggingAUser {
+			  login(
+			    email: "${email}"
+			    password: "${password}"
+			  ) {
+			    accessToken,
+					success
+			  }
+			}
+			`,
+      })
+      .then((res) => [res.data, res.headers]);
+    expect(res.data).toBeTruthy();
+    expect(res.data.login).toBeTruthy();
+    expect(res.data.login.success).toBeTruthy();
+    expect(res.data.login.accessToken).toBeTruthy();
+    expect(verifyAccessToken(res.data.login.accessToken)).toBeTruthy();
+    // checking the headers
+    const [rid, path, httpOnly] = headers["set-cookie"][0].split("; ");
+    expect(verifyRefreshToken(rid.split("rid=")[1])).toBeTruthy();
+    expect(path.split("=")[1]).toEqual("/");
+    expect(httpOnly.toUpperCase()).toEqual("HTTPONLY");
+  });
+  test("should refuse to login user with third party creds", async () => {
+    const email = "valid@email.com";
+    const password = "Valid123@&PA$word";
+    // create the user
+    const userLogic: UserLogic = new UserLogicImpl();
+    const newUser = new User();
+    newUser.email = email;
+    newUser.firstName = "first";
+    newUser.lastName = "last";
+    newUser.isThirdParty = true;
+    newUser.role = UserRole.MEMBER;
+    newUser.tokenVer = 1;
+    await userLogic.createUser(newUser);
+    const data = await axios
+      .post(`http://localhost:${PORT}/graphql`, {
+        query: `
+			mutation loggingAUser {
+			  login(
+			    email: "${email}"
+			    password: "${password}"
+			  ) {
+			    accessToken,
+					success
+			  }
+			}
+			`,
+      })
+      .then((res) => res.data);
+
+    expect(data.errors).toBeTruthy();
+    expect(data.errors[0].message.indexOf("another")).not.toEqual(-1);
+  });
+  test("should get user id", async () => {
+    const email = "valid@email.com";
+    const password = "Valid123@&PA$word";
+    // create the user
+    const userLogic: UserLogic = new UserLogicImpl();
+    const newUser = new User();
+    newUser.email = email;
+    newUser.password = password;
+    newUser.firstName = "first";
+    newUser.lastName = "last";
+    newUser.isThirdParty = false;
+    newUser.role = UserRole.MEMBER;
+    newUser.tokenVer = 1;
+    await userLogic.createUser(newUser);
+
+    const res = await axios
+      .post(`http://localhost:${PORT}/graphql`, {
+        query: `
+			mutation loggingAUser {
+			  login(
+			    email: "${email}"
+			    password: "${password}"
+			  ) {
+			    accessToken,
+					success
+			  }
+			}
+			`,
+      })
+      .then((res) => res.data);
+    const accessToken = res.data.login.accessToken;
+    const whoAmIRes = await axios
+      .post(
+        `http://localhost:${PORT}/graphql`,
+        {
+          query: `
+			query wimi {
+				whatIsMyId {
+					id
+				}
+			}
+		`,
+        },
+        {
+          headers: {
+            Authorization: `Bearer ${accessToken}`,
+          },
+        }
+      )
+      .then((res) => res.data)
+      .then((content) => content.data);
+    expect(whoAmIRes.whatIsMyId.id).toBeTruthy();
   });
 });

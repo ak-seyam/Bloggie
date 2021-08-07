@@ -36,9 +36,9 @@ function apolloUnauthenticatedWrapper<T>(wrappedFunction: AsyncFunction<T>) {
 export async function apolloErrorsWrapper<T>(
   wrappedFunction: AsyncFunction<T>
 ) {
-  // using decorator design pattern we can include as much wrappers as we can here 
-	// editing guide for my future self
-	// replace the wrapped function with another wrapper that takes the wrapped function
+  // using decorator design pattern we can include as much wrappers as we can here
+  // editing guide for my future self
+  // replace the wrapped function with another wrapper that takes the wrapped function
   return await apolloUnauthenticatedWrapper<T>(
     await apolloInvalidInputErrorWrapper<T>(wrappedFunction)
   )();
