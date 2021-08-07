@@ -2,7 +2,7 @@ import { CommentDependencyValidator } from "@controllers/data-interaction/articl
 import CommentModel, { Comment } from "@models/article/comments";
 import UserModel from "@models/user/user";
 import { DocumentType } from "@typegoose/typegoose";
-import InvalidInputError from "@utils/database/user-input-error";
+import InvalidInputError from "@utils/api/user-input-error";
 import { ObjectID } from "mongodb";
 import CommentsLogic from "./comments-logic";
 export default class CommentsLogicImpl implements CommentsLogic {

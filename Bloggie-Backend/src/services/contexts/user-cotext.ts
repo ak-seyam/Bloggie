@@ -1,5 +1,5 @@
 import { User } from "@models/user/user";
 
-export default interface UserContext {
-  user: User;
+export default interface PayloadContext {
+  payload?: any;
 }

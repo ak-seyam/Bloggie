@@ -7,7 +7,7 @@ import UserModel from "@models/user/user";
 import articleCreation from "@tests/utils/articles/article-creation";
 import setupTeardown from "@tests/utils/data-interaction/setup-teardown";
 import { mongoose } from "@typegoose/typegoose";
-import InvalidInputError from "@utils/database/user-input-error";
+import InvalidInputError from "@utils/api/user-input-error";
 import { ObjectID } from "mongodb";
 
 describe("Comments data interaction test suit", () => {

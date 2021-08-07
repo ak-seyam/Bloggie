@@ -1,7 +1,7 @@
 import { prop, getModelForClass, pre } from "@typegoose/typegoose";
 import PasswordHash from "@utils/password/password-hash";
 import BcryptPasswordHash from "@utils/password/bcrypt-password-hash";
-import InvalidInputError from "@utils/database/user-input-error";
+import InvalidInputError from "@utils/api/user-input-error";
 import { ObjectId } from "mongodb";
 import { Field, ID, ObjectType, registerEnumType } from "type-graphql";
 
