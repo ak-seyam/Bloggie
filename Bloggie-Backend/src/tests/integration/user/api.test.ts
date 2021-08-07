@@ -22,7 +22,7 @@ describe("User API Test suite", () => {
 			`,
       })
       .then((res) => [res.data, res.headers]);
-
+    console.log(res);
     expect(res.data).toBeTruthy();
     expect(res.data.register).toBeTruthy();
     expect(res.data.register.success).toBeTruthy();
