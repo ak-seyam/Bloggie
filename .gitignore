@@ -2,3 +2,4 @@
 dev.env
 test.env
 Bloggie-Backend/.vscode/settings.json
+development.env

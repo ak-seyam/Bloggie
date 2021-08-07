@@ -5,7 +5,12 @@ import { AsyncFunction } from "@services/utils/errors-wrapper";
 import { mongoose } from "@typegoose/typegoose";
 import { startingServer, teardownServer } from "@utils/api/server-connection";
 
-export default function setupTeardownGraphQL_API(port: number) {
+/**
+ * @description run the setup and teardown logic for the api
+ * @returns the port for the server
+ */
+export default function setupTeardownGraphQL_API() {
+  const port = Math.ceil(1024 + Math.random() * 10000);
   beforeAll(async () => {
     require("../../../env_setter");
     require("@utils/database/database-connection");
@@ -20,4 +25,5 @@ export default function setupTeardownGraphQL_API(port: number) {
   afterAll(async () => {
     mongoose.disconnect();
   });
+  return port;
 }

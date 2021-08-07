@@ -8,5 +8,6 @@ export default async function getApolloConfig(): Promise<ApolloServerExpressConf
     schema: await buildSchema({
       resolvers: [resolversDir],
     }),
+    context: ({ req, res }) => ({ req, res }),
   };
 }
