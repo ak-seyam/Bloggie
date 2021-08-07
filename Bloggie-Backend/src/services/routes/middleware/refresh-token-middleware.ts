@@ -12,7 +12,7 @@ export const RefreshTokenMiddleware: ExpressMiddleware = async (
   next
 ) => {
   // get the refresh token from req cookies
-  const refreshToken = req.cookies("rid");
+  const refreshToken = req.cookies["rid"];
   // get the access token and verify it too
   // to stop requests that will call /refresh_token to get an access token even
   // it doesn't have a one
