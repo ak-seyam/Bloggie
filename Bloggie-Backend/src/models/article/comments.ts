@@ -18,7 +18,7 @@ export class Comment {
   @Field(() => User)
   author: Ref<User>;
 
-  @prop({ required: true, minlength: [15, "Invalid comment, too short"] })
+  @prop({ required: true, minlength: [10, "Invalid comment, too short"] })
   @Field()
   content: string;
 

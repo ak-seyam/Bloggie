@@ -27,6 +27,7 @@ import UserLogicImpl from "@controllers/data-interaction/user/user-logic-impl";
 import UserLogic from "@controllers/data-interaction/user/user-logic";
 import { articleDependencyValidator } from "@controllers/data-interaction/article/dependency-validator";
 import { apolloErrorsWrapper } from "@services/utils/graph-ql-resolvers-wrapper";
+import handleNeitherAuthorNorAdmin from "./utils/author-or-admin";
 
 @ObjectType()
 export class DoneSuccessfully {
@@ -155,21 +156,8 @@ export default class ArticleResolver {
       if (!article) {
         throw new InvalidInputError("Invalid article id");
       }
-      console.log(
-        "article author is",
-        (article.author as User).userId,
-        "and the payload is",
-        context.payload.iss,
-        "payload role",
-        context.payload.role
-      );
       // make article edit only possible for admins or the original authors
-      if (
-        context.payload.role != UserRole.ADMIN &&
-        context.payload.iss != (article.author as User).userId
-      ) {
-        throw new InvalidAuthorizationRoleError("Unauthorized");
-      }
+      handleNeitherAuthorNorAdmin(context, (article.author as User).userId);
       const newArticleData = new Article();
       if (newData.title) newArticleData.title = newData.title;
       if (newData.content) newArticleData.content = newData.content;
@@ -206,12 +194,7 @@ export default class ArticleResolver {
       }
       console.log("article is", article);
       // make article delete only possible for admins or the original authors
-      if (
-        context.payload.role != UserRole.ADMIN ||
-        context.payload.iss != (article.author! as User).userId
-      ) {
-        throw new InvalidAuthorizationRoleError("Unauthorized");
-      }
+      handleNeitherAuthorNorAdmin(context, (article.author as User).userId);
       try {
         await articleLogic.deleteArticle(Types.ObjectId(articleId));
         return {
