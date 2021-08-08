@@ -171,7 +171,6 @@ export default class UserResolver {
   ): Promise<UserContent> {
     const userLogic: UserLogic = new UserLogicImpl();
     const user = await userLogic.getUserById(Types.ObjectId(id));
-    console.log("the user is", user);
     const articles = await userLogic.getArticlesByUser(
       user._id,
       limit,

@@ -29,6 +29,7 @@ import { articleDependencyValidator } from "@controllers/data-interaction/articl
 
 @ObjectType()
 export class DoneSuccessfully {
+  @Field()
   success: boolean;
 }
 
@@ -148,17 +149,26 @@ export default class ArticleResolver {
     if (!article) {
       throw new InvalidInputError("Invalid article id");
     }
-    console.log("article is", article);
+    console.log(
+      "article author is",
+      (article.author as User).userId,
+      "and the payload is",
+      context.payload.iss,
+      "payload role",
+      context.payload.role
+    );
     // make article edit only possible for admins or the original authors
     if (
-      context.payload.role != UserRole.ADMIN ||
-      context.payload.iss != (article.author! as User).userId
+      context.payload.role != UserRole.ADMIN &&
+      context.payload.iss != (article.author as User).userId
     ) {
       throw new InvalidAuthorizationRoleError("Unauthorized");
     }
     const newArticleData = new Article();
-    newArticleData.title = newData.title;
-    newArticleData.content = newData.content;
+    if (newData.title) newArticleData.title = newData.title;
+    if (newData.content) newArticleData.content = newData.content;
+    console.log("new article data is?", newArticleData);
+
     const articleAfterUpdate = await articleLogic.updateArticle(
       Types.ObjectId(newData.articleId),
       newArticleData

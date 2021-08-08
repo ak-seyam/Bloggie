@@ -42,7 +42,6 @@ describe("User Data API test suite", () => {
       .then((res) => res.data)
       .then((content) => content.data)
       .then((res) => res.user);
-    console.log("user is", user);
     expect(user.email).toBeTruthy();
     expect(user.firstName).toBeTruthy();
     expect(user.lastName).toBeTruthy();
