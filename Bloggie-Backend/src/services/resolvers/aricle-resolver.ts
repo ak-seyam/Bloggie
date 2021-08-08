@@ -26,6 +26,7 @@ import { InvalidAuthorizationRoleError } from "@utils/api/access-errors";
 import UserLogicImpl from "@controllers/data-interaction/user/user-logic-impl";
 import UserLogic from "@controllers/data-interaction/user/user-logic";
 import { articleDependencyValidator } from "@controllers/data-interaction/article/dependency-validator";
+import { apolloErrorsWrapper } from "@services/utils/graph-ql-resolvers-wrapper";
 
 @ObjectType()
 export class DoneSuccessfully {
@@ -91,18 +92,20 @@ export default class ArticleResolver {
     @Arg("commentsLimit", { nullable: true, defaultValue: 5 })
     commentsLimit: number
   ): Promise<ArticleWithComments[]> {
-    const articleLogic: ArticleLogic = new ArticleLogicImpl();
-    const articles = await articleLogic.getArticlesByTitle(
-      title,
-      (limit = 5),
-      from ? Types.ObjectId(from) : undefined
-    );
-    return this.articlesWithComments(
-      articles,
-      commentsLimit,
-      commentsFrom,
-      articleLogic
-    );
+    return apolloErrorsWrapper<ArticleWithComments[]>(async () => {
+      const articleLogic: ArticleLogic = new ArticleLogicImpl();
+      const articles = await articleLogic.getArticlesByTitle(
+        title,
+        (limit = 5),
+        from ? Types.ObjectId(from) : undefined
+      );
+      return this.articlesWithComments(
+        articles,
+        commentsLimit,
+        commentsFrom,
+        articleLogic
+      );
+    });
   }
 
   @Mutation(() => ArticleWithComments)
@@ -114,23 +117,25 @@ export default class ArticleResolver {
     @Arg("commetsFrom", { nullable: true }) commentsFrom: string,
     @Ctx() context: PayloadContext
   ) {
-    const articleLogic: ArticleLogic = new ArticleLogicImpl();
-    const article = new Article();
-    article.content = content;
-    article.title = title;
-    const persistedArticle = await articleLogic.createArticle(
-      Types.ObjectId(context.payload.iss),
-      article,
-      articleDependencyValidator
-    );
-    return (
-      await this.articlesWithComments(
-        [persistedArticle],
-        commentsLimit,
-        commentsFrom,
-        articleLogic
-      )
-    )[0];
+    return apolloErrorsWrapper<ArticleWithComments>(async () => {
+      const articleLogic: ArticleLogic = new ArticleLogicImpl();
+      const article = new Article();
+      article.content = content;
+      article.title = title;
+      const persistedArticle = await articleLogic.createArticle(
+        Types.ObjectId(context.payload.iss),
+        article,
+        articleDependencyValidator
+      );
+      return (
+        await this.articlesWithComments(
+          [persistedArticle],
+          commentsLimit,
+          commentsFrom,
+          articleLogic
+        )
+      )[0];
+    });
   }
 
   @Mutation(() => ArticleWithComments)
@@ -142,45 +147,47 @@ export default class ArticleResolver {
     commentsLimit: number,
     @Ctx() context: ExpressContext & PayloadContext
   ) {
-    const articleLogic: ArticleLogic = new ArticleLogicImpl();
-    const article = await articleLogic.getArticleById(
-      Types.ObjectId(newData.articleId)
-    );
-    if (!article) {
-      throw new InvalidInputError("Invalid article id");
-    }
-    console.log(
-      "article author is",
-      (article.author as User).userId,
-      "and the payload is",
-      context.payload.iss,
-      "payload role",
-      context.payload.role
-    );
-    // make article edit only possible for admins or the original authors
-    if (
-      context.payload.role != UserRole.ADMIN &&
-      context.payload.iss != (article.author as User).userId
-    ) {
-      throw new InvalidAuthorizationRoleError("Unauthorized");
-    }
-    const newArticleData = new Article();
-    if (newData.title) newArticleData.title = newData.title;
-    if (newData.content) newArticleData.content = newData.content;
-    console.log("new article data is?", newArticleData);
+    return apolloErrorsWrapper<ArticleWithComments>(async () => {
+      const articleLogic: ArticleLogic = new ArticleLogicImpl();
+      const article = await articleLogic.getArticleById(
+        Types.ObjectId(newData.articleId)
+      );
+      if (!article) {
+        throw new InvalidInputError("Invalid article id");
+      }
+      console.log(
+        "article author is",
+        (article.author as User).userId,
+        "and the payload is",
+        context.payload.iss,
+        "payload role",
+        context.payload.role
+      );
+      // make article edit only possible for admins or the original authors
+      if (
+        context.payload.role != UserRole.ADMIN &&
+        context.payload.iss != (article.author as User).userId
+      ) {
+        throw new InvalidAuthorizationRoleError("Unauthorized");
+      }
+      const newArticleData = new Article();
+      if (newData.title) newArticleData.title = newData.title;
+      if (newData.content) newArticleData.content = newData.content;
+      console.log("new article data is?", newArticleData);
 
-    const articleAfterUpdate = await articleLogic.updateArticle(
-      Types.ObjectId(newData.articleId),
-      newArticleData
-    );
-    return (
-      await this.articlesWithComments(
-        [articleAfterUpdate],
-        commentsLimit,
-        commentsFrom,
-        articleLogic
-      )
-    )[0];
+      const articleAfterUpdate = await articleLogic.updateArticle(
+        Types.ObjectId(newData.articleId),
+        newArticleData
+      );
+      return (
+        await this.articlesWithComments(
+          [articleAfterUpdate],
+          commentsLimit,
+          commentsFrom,
+          articleLogic
+        )
+      )[0];
+    });
   }
 
   @Mutation(() => DoneSuccessfully)
@@ -189,28 +196,30 @@ export default class ArticleResolver {
     @Arg("articleId") articleId: string,
     @Ctx() context: PayloadContext
   ): Promise<DoneSuccessfully> {
-    const articleLogic: ArticleLogic = new ArticleLogicImpl();
-    const article = await articleLogic.getArticleById(
-      Types.ObjectId(articleId)
-    );
-    if (!article) {
-      throw new InvalidInputError("Invalid article id");
-    }
-    console.log("article is", article);
-    // make article delete only possible for admins or the original authors
-    if (
-      context.payload.role != UserRole.ADMIN ||
-      context.payload.iss != (article.author! as User).userId
-    ) {
-      throw new InvalidAuthorizationRoleError("Unauthorized");
-    }
-    try {
-      await articleLogic.deleteArticle(Types.ObjectId(articleId));
-      return {
-        success: true,
-      };
-    } catch (e) {
-      throw e;
-    }
+    return apolloErrorsWrapper<DoneSuccessfully>(async () => {
+      const articleLogic: ArticleLogic = new ArticleLogicImpl();
+      const article = await articleLogic.getArticleById(
+        Types.ObjectId(articleId)
+      );
+      if (!article) {
+        throw new InvalidInputError("Invalid article id");
+      }
+      console.log("article is", article);
+      // make article delete only possible for admins or the original authors
+      if (
+        context.payload.role != UserRole.ADMIN ||
+        context.payload.iss != (article.author! as User).userId
+      ) {
+        throw new InvalidAuthorizationRoleError("Unauthorized");
+      }
+      try {
+        await articleLogic.deleteArticle(Types.ObjectId(articleId));
+        return {
+          success: true,
+        };
+      } catch (e) {
+        throw e;
+      }
+    });
   }
 }
