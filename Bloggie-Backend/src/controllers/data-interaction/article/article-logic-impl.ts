@@ -3,6 +3,7 @@ import CommentModel, { Comment } from "@models/article/comments";
 import { DocumentType } from "@typegoose/typegoose";
 import InvalidInputError from "@utils/api/user-input-error";
 import { ObjectId } from "bson";
+import { Types } from "mongoose";
 import ArticleLogic from "./article-logic";
 import {
   ArticleDependencyValidator,
@@ -21,7 +22,7 @@ export default class ArticleLogicImpl implements ArticleLogic {
   async getArticlesByTitle(
     title: string,
     limit: number = 5,
-    from: string
+    from?: ObjectId
   ): Promise<DocumentType<Article>[]> {
     console.debug(`
 	   Warning: This has a flaw, if title contain more stuff than the actual thing in the database it will result non
@@ -86,7 +87,7 @@ export default class ArticleLogicImpl implements ArticleLogic {
   }
   async getCommentsForArticle(
     articleId: ObjectId,
-    limit: number,
+    limit: number = 5,
     from?: ObjectId
   ): Promise<DocumentType<Comment>[]> {
     const article = await this.getArticleById(articleId);

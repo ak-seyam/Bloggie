@@ -12,7 +12,7 @@ export default interface ArticleLogic {
   getArticlesByTitle(
     title: string,
     limit?: number,
-    from?: string
+    from?: ObjectID
   ): Promise<DocumentType<Article>[]>;
   createArticle(
     authorId: ObjectID,
@@ -26,7 +26,7 @@ export default interface ArticleLogic {
   deleteArticle(articleId: ObjectID): Promise<boolean>;
   getCommentsForArticle(
     articleId: ObjectID,
-    limit: number,
+    limit?: number,
     from?: ObjectID
   ): Promise<DocumentType<Comment>[]>;
 }
