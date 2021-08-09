@@ -63,9 +63,9 @@ export default class CommentsResolver {
       const originalComment = await commentsLogic.getCommentById(
         Types.ObjectId(newData.commentId)
       );
-			if (!originalComment) {
-				throw new InvalidInputError("Invalid comment id");
-			}
+      if (!originalComment) {
+        throw new InvalidInputError("Invalid comment id");
+      }
       handleNeitherAuthorNorAdmin(
         context,
         (originalComment.author as User).userId
@@ -81,10 +81,23 @@ export default class CommentsResolver {
 
   @Mutation(() => DoneSuccessfully)
   @UseMiddleware(isAuth)
-  async deleteComment(@Arg("commentId") commentId: string) {
+  async deleteComment(
+    @Arg("commentId") commentId: string,
+    @Ctx() context: PayloadContext
+  ) {
     return apolloErrorsWrapper<DoneSuccessfully>(async () => {
       try {
         const commentsLogic: CommentsLogic = new CommentsLogicImpl();
+        const originalComment = await commentsLogic.getCommentById(
+          Types.ObjectId(commentId)
+        );
+        if (!originalComment) {
+          throw new InvalidInputError("Invalid comment id");
+        }
+        handleNeitherAuthorNorAdmin(
+          context,
+          (originalComment.author as User).userId
+        );
         await commentsLogic.deleteComment(Types.ObjectId(commentId));
         return { success: true };
       } catch (e) {

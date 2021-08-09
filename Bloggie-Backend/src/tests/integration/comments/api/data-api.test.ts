@@ -137,4 +137,74 @@ describe("Comments data API test suite", () => {
       .then((content) => content.errors);
     expect(errors[0].message.indexOf("Unauthorized")).not.toEqual(-1);
   });
+  test("should delete comment", async () => {
+    const { article, user } = await articleCreation();
+    const commentLogic: CommentsLogic = new CommentsLogicImpl();
+    const content = "the best thing in this world!";
+    const tempComment = new Comment();
+    tempComment.content = content;
+    const comment = await commentLogic.addComment(
+      article._id,
+      user._id,
+      tempComment,
+      commentDependencyValidator
+    );
+    const accessToken = await login(graphQLUrl, user.email, user.password!);
+    const res = await axios
+      .post(
+        graphQLUrl,
+        {
+          query: `
+				mutation delete {
+					deleteComment(commentId: "${comment.id}") {
+						success
+					}
+				}
+			`,
+        },
+        { headers: { Authorization: `Bearer ${accessToken}` } }
+      )
+      .then((res) => res.data)
+      .then((content) => content.data.deleteComment);
+    expect(res.success).toBeTruthy();
+  });
+  test("should reject deleting comment by different user", async () => {
+    const { article, user: originalAuthor } = await articleCreation();
+    const commentLogic: CommentsLogic = new CommentsLogicImpl();
+    const content = "the best thing in this world!";
+    const tempComment = new Comment();
+    tempComment.content = content;
+    const comment = await commentLogic.addComment(
+      article._id,
+      originalAuthor._id,
+      tempComment,
+      commentDependencyValidator
+    );
+    let user = new User();
+    user.email = "right@gmail.com";
+    user.password = "WCorrectXD_123$#";
+    user.firstName = "firstname";
+    user.lastName = "lastname";
+    const userLogic: UserLogic = new UserLogicImpl();
+    user = await userLogic.createUser(user);
+    user.password = "WCorrectXD_123$#";
+    const accessToken = await login(graphQLUrl, user.email, user.password!);
+    const res = await axios
+      .post(
+        graphQLUrl,
+        {
+          query: `
+				mutation delete {
+					deleteComment(commentId: "${comment.id}") {
+						success
+					}
+				}
+			`,
+        },
+        { headers: { Authorization: `Bearer ${accessToken}` } }
+      )
+      .then((res) => res.data)
+      .then((content) => content.errors);
+    expect(res[0].message.indexOf("Unauthorized")).not.toBe(-1);
+  });
 });
