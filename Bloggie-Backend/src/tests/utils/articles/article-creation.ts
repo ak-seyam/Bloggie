@@ -24,7 +24,7 @@ const articleCreation = async (): Promise<{
     "Do proident qui eu occaecat ut velit. Cillum ut esse minim cupidatat nisi. Cillum ullamco elit nisi sunt tempor id ad incididunt dolor aliquip quis laborum ex. Fugiat eu laborum ipsum adipisicing. Veniam ut sit ullamco eu veniam esse nisi amet pariatur sit elit proident ex quis. Ea officia aute pariatur laborum officia aliquip mollit quis laborum labore. Laboris eu labore dolore dolor irure incididunt officia est.";
   const userLogic: UserLogic = new UserLogicImpl();
   const user = await userLogic.createUser(commonWriter);
-	user.password = commonWriter.password;
+  user.password = commonWriter.password;
   const articleLogic: ArticleLogic = new ArticleLogicImpl();
   const tempArticle = new Article();
   tempArticle.title = TITLE;

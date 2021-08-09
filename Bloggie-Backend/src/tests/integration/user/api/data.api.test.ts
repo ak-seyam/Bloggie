@@ -18,11 +18,15 @@ describe("User Data API test suite", () => {
     _user.lastName = "lastname";
     const userLogic: UserLogic = new UserLogicImpl();
     const persistedUser = await userLogic.createUser(_user);
-		const article = new Article();
-		article.content = `Ea mollit velit aute anim id in. Consequat est ullamco officia ex Lorem ipsum. Labore nisi fugiat nulla id reprehenderit do quis proident reprehenderit ipsum. Tempor et nostrud pariatur veniam pariatur ex aliquip occaecat et laborum in duis dolor. Laboris ullamco in excepteur ut et velit aliquip anim laboris proident. Laboris ullamco ex ea quis dolor exercitation dolor duis.`
-		article.title = `the title`
-		const articleLogic: ArticleLogic = new ArticleLogicImpl();
-		articleLogic.createArticle(persistedUser._id, article, articleDependencyValidator);
+    const article = new Article();
+    article.content = `Ea mollit velit aute anim id in. Consequat est ullamco officia ex Lorem ipsum. Labore nisi fugiat nulla id reprehenderit do quis proident reprehenderit ipsum. Tempor et nostrud pariatur veniam pariatur ex aliquip occaecat et laborum in duis dolor. Laboris ullamco in excepteur ut et velit aliquip anim laboris proident. Laboris ullamco ex ea quis dolor exercitation dolor duis.`;
+    article.title = `the title`;
+    const articleLogic: ArticleLogic = new ArticleLogicImpl();
+    articleLogic.createArticle(
+      persistedUser._id,
+      article,
+      articleDependencyValidator
+    );
     console.log(`persisted user id ${persistedUser._id}`);
     const user = await axios
       .post(`http://localhost:${PORT}/graphql`, {
@@ -46,6 +50,6 @@ describe("User Data API test suite", () => {
     expect(user.firstName).toBeTruthy();
     expect(user.lastName).toBeTruthy();
     expect(Array.isArray(user.articles)).toBeTruthy();
-		expect(user.articles[0].title).toEqual(article.title);
+    expect(user.articles[0].title).toEqual(article.title);
   });
 });
