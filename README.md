@@ -8,9 +8,10 @@ as their markup language because it's super easy and fun 😁 also dealing with 
 I and probably you wanted a very simple blogging system that make it easy to write your thoughts and that's it! It doesn't try to do anything other than that. And being free and open-sourced is a good plus, so that's what Bloggie does.
 
 ## TODO
-- [ ] Backend (in progress)
+- [x] Backend
+- [ ] Frontend (in progress)
 - [ ] Deployment
-- [ ] Frontend 
+ 
 
 ## Getting started
 
