@@ -9,7 +9,11 @@ import {
 
 export default interface ArticleLogic {
   getArticleById(articleId: ObjectID): Promise<DocumentType<Article>>;
-  getArticleByTitle(title: string): Promise<DocumentType<Article>[]>;
+  getArticlesByTitle(
+    title: string,
+    limit?: number,
+    from?: ObjectID
+  ): Promise<DocumentType<Article>[]>;
   createArticle(
     authorId: ObjectID,
     newData: Article,
@@ -22,7 +26,7 @@ export default interface ArticleLogic {
   deleteArticle(articleId: ObjectID): Promise<boolean>;
   getCommentsForArticle(
     articleId: ObjectID,
-    limit: number,
+    limit?: number,
     from?: ObjectID
   ): Promise<DocumentType<Comment>[]>;
 }

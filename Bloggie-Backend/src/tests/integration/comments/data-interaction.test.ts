@@ -202,9 +202,9 @@ describe("Comments data interaction test suit", () => {
     const resComment = await commentsLogic.getCommentById(comment._id);
     expect(resComment.content).toEqual(comment.content);
     // @ts-ignore
-    expect(resComment.author).toEqual(comment.author._id);
+    expect(resComment.author.userId).toEqual(comment.author._id);
     // @ts-ignore
-    expect(resComment.article).toEqual(comment.article._id);
+    expect(resComment.article.articleId).toEqual(comment.article._id);
   });
 
   test("should reject getting comment by invalid id", async () => {

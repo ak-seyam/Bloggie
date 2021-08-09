@@ -1,5 +1,8 @@
+import UserLogic from "@controllers/data-interaction/user/user-logic";
+import UserLogicImpl from "@controllers/data-interaction/user/user-logic-impl";
 import { UserRole } from "@models/user/user";
-import { sign, verify } from "jsonwebtoken";
+import { JwtPayload, sign, verify } from "jsonwebtoken";
+import { Types } from "mongoose";
 
 interface UserPayload {
   iss: string;
@@ -32,14 +35,31 @@ export function signAccessToken(payload: UserPayload) {
   });
 }
 
-function verifyToken(token: string, secret: string) {
-  return verify(token, secret, { ignoreExpiration: false });
+async function verifyToken(
+  token: string,
+  secret: string,
+  ignoreExpiration: boolean = false
+) {
+  const payload: any = verify(token, secret, { ignoreExpiration });
+  const userLogic: UserLogic = new UserLogicImpl();
+  const user = await userLogic.getUserById(Types.ObjectId(payload.iss));
+  if (!payload || payload.tokenVer !== user.tokenVer) {
+    return null;
+  }
+  return payload;
 }
 
 export function verifyRefreshToken(token: string) {
   return verifyToken(token, process.env["REFRESH_TOKEN_SECRET"]!);
 }
 
-export function verifyAccessToken(token: string) {
-  return verifyToken(token, process.env["ACCESS_TOKEN_SECRET"]!);
+export function verifyAccessToken(
+  token: string,
+  ignoreExpiration: boolean = false
+) {
+  return verifyToken(
+    token,
+    process.env["ACCESS_TOKEN_SECRET"]!,
+    ignoreExpiration
+  );
 }

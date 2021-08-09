@@ -10,6 +10,7 @@ services:
       - "5656:5656"
     volumes:
       - ./Bloggie-Backend:/app
+      - /app/node_modules
     depends_on: 
       - mongodb
   mongodb:
