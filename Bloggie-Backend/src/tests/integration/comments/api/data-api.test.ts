@@ -78,13 +78,10 @@ describe("Comments data API test suite", () => {
       .then((content) => content.data.editComment);
     expect(res.date).not.toEqual(comment.date);
     expect(res.content).toEqual(commentContent);
-		// to fix serialize to the same string I've used JSON.stringify to serialize
+    // to fix serialize to the same string I've used JSON.stringify to serialize
     expect(JSON.stringify(res.commentId)).toEqual(
       JSON.stringify(comment.commentId)
     );
   });
-	test.todo('should reject updating comment with by different author', async () => {
-		
-	})
-	
+  test.todo("should reject updating comment with by different author");
 });
