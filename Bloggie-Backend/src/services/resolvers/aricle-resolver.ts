@@ -192,7 +192,6 @@ export default class ArticleResolver {
       if (!article) {
         throw new InvalidInputError("Invalid article id");
       }
-      console.log("article is", article);
       // make article delete only possible for admins or the original authors
       handleNeitherAuthorNorAdmin(context, (article.author as User).userId);
       try {
