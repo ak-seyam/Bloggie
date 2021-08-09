@@ -5,12 +5,14 @@ import UserLogic from "@controllers/data-interaction/user/user-logic";
 import UserLogicImpl from "@controllers/data-interaction/user/user-logic-impl";
 import { Comment } from "@models/article/comments";
 import { User } from "@models/user/user";
+import { login } from "@tests/integration/utils/login";
 import setupTeardownGraphQL_API from "@tests/utils/api/setup-teardown";
 import articleCreation from "@tests/utils/articles/article-creation";
 import axios from "axios";
 
 describe("Article data api test suite", () => {
   const PORT = setupTeardownGraphQL_API();
+  const graphqlUrl = `http://localhost:${PORT}/graphql`;
   test("should get article and comments successfully", async () => {
     const { article, user } = await articleCreation();
     // create comment
@@ -101,23 +103,11 @@ describe("Article data api test suite", () => {
 
   test("should edit article with the same author", async () => {
     const { article, user } = await articleCreation();
-    const res = await axios
-      .post(`http://localhost:${PORT}/graphql`, {
-        query: `
-			mutation loggingAUser {
-			  login(
-			    email: "${user.email}"
-			    password: "${user.password}"
-			  ) {
-			    accessToken,
-					success
-			  }
-			}
-			`,
-      })
-      .then((res) => res.data);
-    const accessToken = res.data.login.accessToken;
-    console.log("the access token is?", accessToken);
+    const accessToken = await login(
+      `http://localhost:${PORT}/graphql`,
+      user.email,
+      user.password!
+    );
     const newContent = `Nisi cillum proident cupidatat sint voluptate velit reprehenderit consectetur excepteur eiusmod reprehenderit. In deserunt irure proident occaecat sunt velit labore in id tempor labore ex aliquip. Ut adipisicing voluptate ea velit id proident ut consequat nulla. Ex consequat eiusmod aliqua cillum labore occaecat. Aliqua elit culpa tempor mollit deserunt aliquip. Ipsum pariatur exercitation occaecat est amet adipisicing sit fugiat tempor ex dolore enim laborum. Ea amet non consequat magna ea commodo duis tempor. Eiusmod labore tempor proident deserunt commodo est cillum proident. Ipsum deserunt consequat fugiat dolor. Ut cillum aute nulla aliquip amet. Fugiat do et aute cupidatat irure et proident incididunt in magna qui.`;
     const response = await axios
       .post(
@@ -158,7 +148,6 @@ describe("Article data api test suite", () => {
     anotherUser.password = "WCorrectXD_123$#";
 
     // login with another user
-
     const res = await axios
       .post(`http://localhost:${PORT}/graphql`, {
         query: `
@@ -199,5 +188,62 @@ describe("Article data api test suite", () => {
       .then((data) => data.errors);
     expect(errors[0].message.indexOf("Unauthorized")).not.toEqual(-1);
   });
-  test.todo("should delete successfully");
+  test("should delete successfully", async () => {
+    const { article, user } = await articleCreation();
+    const accessToken = await login(graphqlUrl, user.email, user.password!);
+    const res = await axios
+      .post(
+        graphqlUrl,
+        {
+          query: `
+				mutation delete {
+					deleteArticle(articleId: "${article.id}") {
+						success
+					}
+				}	
+			`,
+        },
+        {
+          headers: {
+            Authorization: `Bearer ${accessToken}`,
+          },
+        }
+      )
+      .then((res) => res.data)
+      .then((content) => content.data.deleteArticle);
+    expect(res.success).toBeTruthy();
+  });
+  test("should reject deleteing article by different user", async () => {
+    const { article, user: originalAuthor } = await articleCreation();
+    let user = new User();
+    user.email = "right@gmail.com";
+    user.password = "WCorrectXD_123$#";
+    user.firstName = "firstname";
+    user.lastName = "lastname";
+    const userLogic: UserLogic = new UserLogicImpl();
+    user = await userLogic.createUser(user);
+    user.password = "WCorrectXD_123$#";
+    const accessToken = await login(graphqlUrl, user.email, user.password!);
+    const errors = await axios
+      .post(
+        graphqlUrl,
+        {
+          query: `
+				mutation delete {
+					deleteArticle(articleId: "${article.id}") {
+						success
+					}
+				}	
+			`,
+        },
+        {
+          headers: {
+            Authorization: `Bearer ${accessToken}`,
+          },
+        }
+      )
+      .then((res) => res.data)
+      .then((content) => content.errors);
+    expect(errors[0].message.indexOf("Unauthorized")).not.toEqual(-1);
+  });
 });

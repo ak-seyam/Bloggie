@@ -161,7 +161,6 @@ export default class ArticleResolver {
       const newArticleData = new Article();
       if (newData.title) newArticleData.title = newData.title;
       if (newData.content) newArticleData.content = newData.content;
-      console.log("new article data is?", newArticleData);
 
       const articleAfterUpdate = await articleLogic.updateArticle(
         Types.ObjectId(newData.articleId),

@@ -113,7 +113,7 @@ describe("Comments data API test suite", () => {
       anotherUser.email,
       anotherUser.password
     );
-		const errors = await axios
+    const errors = await axios
       .post(
         graphQLUrl,
         {
@@ -134,10 +134,7 @@ describe("Comments data API test suite", () => {
         }
       )
       .then((res) => res.data)
-      .then((content) => {
-				console.log("content?", content)
-				return content.errors
-			});
-			expect(errors[0].message.indexOf("Unauthorized")).not.toEqual(-1);
+      .then((content) => content.errors);
+    expect(errors[0].message.indexOf("Unauthorized")).not.toEqual(-1);
   });
 });
