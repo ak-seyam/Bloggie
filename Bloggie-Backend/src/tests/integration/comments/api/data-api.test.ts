@@ -6,6 +6,9 @@ import CommentsLogic from "@controllers/data-interaction/comment/comments-logic"
 import CommentsLogicImpl from "@controllers/data-interaction/comment/comments-logic-impl";
 import { commentDependencyValidator } from "@controllers/data-interaction/comment/dependency-validator";
 import { Comment } from "@models/article/comments";
+import { User } from "@models/user/user";
+import UserLogicImpl from "@controllers/data-interaction/user/user-logic-impl";
+import UserLogic from "@controllers/data-interaction/user/user-logic";
 
 describe("Comments data API test suite", () => {
   const PORT = setupTeardownGraphQL_API();
@@ -83,5 +86,58 @@ describe("Comments data API test suite", () => {
       JSON.stringify(comment.commentId)
     );
   });
-  test.todo("should reject updating comment with by different author");
+  test("should reject updating comment with by different author", async () => {
+    const { article, user } = await articleCreation();
+    const commentLogic: CommentsLogic = new CommentsLogicImpl();
+    const content = "the best thing in this world!";
+    const tempComment = new Comment();
+    tempComment.content = content;
+    const comment = await commentLogic.addComment(
+      article._id,
+      user._id,
+      tempComment,
+      commentDependencyValidator
+    );
+    const commentContent = "yoyoyoyoyoyoyoyoyo";
+    // create a new user
+    let anotherUser = new User();
+    anotherUser.email = "right@gmail.com";
+    anotherUser.password = "WCorrectXD_123$#";
+    anotherUser.firstName = "firstname";
+    anotherUser.lastName = "lastname";
+    const userLogic: UserLogic = new UserLogicImpl();
+    anotherUser = await userLogic.createUser(anotherUser);
+    anotherUser.password = "WCorrectXD_123$#";
+    const accessToken = await login(
+      graphQLUrl,
+      anotherUser.email,
+      anotherUser.password
+    );
+		const errors = await axios
+      .post(
+        graphQLUrl,
+        {
+          query: `
+				mutation commentEdit {
+					editComment(content: "${commentContent}", commentId: "${comment._id}") {
+						date,
+						content,
+						commentId
+					}
+				}
+			`,
+        },
+        {
+          headers: {
+            Authorization: `Bearer ${accessToken}`,
+          },
+        }
+      )
+      .then((res) => res.data)
+      .then((content) => {
+				console.log("content?", content)
+				return content.errors
+			});
+			expect(errors[0].message.indexOf("Unauthorized")).not.toEqual(-1);
+  });
 });

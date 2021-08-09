@@ -7,7 +7,11 @@ import { ObjectID } from "mongodb";
 import CommentsLogic from "./comments-logic";
 export default class CommentsLogicImpl implements CommentsLogic {
   async getCommentById(commentId: ObjectID): Promise<DocumentType<Comment>> {
-    const res = await CommentModel.findById(commentId);
+    const res = await CommentModel.findById(commentId)
+      .populate("author")
+      .populate("article")
+      .exec();
+    console.log("");
     if (!res) throw new InvalidInputError("Invalid comment id");
     return res;
   }

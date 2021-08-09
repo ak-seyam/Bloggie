@@ -2,12 +2,16 @@ import CommentsLogic from "@controllers/data-interaction/comment/comments-logic"
 import CommentsLogicImpl from "@controllers/data-interaction/comment/comments-logic-impl";
 import { commentDependencyValidator } from "@controllers/data-interaction/comment/dependency-validator";
 import { Comment } from "@models/article/comments";
+import { User } from "@models/user/user";
+import PayloadContext from "@services/contexts/user-cotext";
 import { apolloErrorsWrapper } from "@services/utils/graph-ql-resolvers-wrapper";
+import InvalidInputError from "@utils/api/user-input-error";
 import { Types } from "mongoose";
 import {
   Arg,
   Args,
   ArgsType,
+  Ctx,
   Field,
   Mutation,
   Resolver,
@@ -15,6 +19,7 @@ import {
 } from "type-graphql";
 import { DoneSuccessfully } from "./aricle-resolver";
 import isAuth from "./middleware/auth";
+import handleNeitherAuthorNorAdmin from "./utils/author-or-admin";
 
 @ArgsType()
 class CommentData {
@@ -49,11 +54,24 @@ export default class CommentsResolver {
 
   @Mutation(() => Comment)
   @UseMiddleware(isAuth)
-  async editComment(@Args() newData: CommentData) {
+  async editComment(
+    @Args() newData: CommentData,
+    @Ctx() context: PayloadContext
+  ) {
     return apolloErrorsWrapper<Comment>(async () => {
+      const commentsLogic: CommentsLogic = new CommentsLogicImpl();
+      const originalComment = await commentsLogic.getCommentById(
+        Types.ObjectId(newData.commentId)
+      );
+			if (!originalComment) {
+				throw new InvalidInputError("Invalid comment id");
+			}
+      handleNeitherAuthorNorAdmin(
+        context,
+        (originalComment.author as User).userId
+      );
       const comment = new Comment();
       if (newData.content) comment.content = newData.content;
-      const commentsLogic: CommentsLogic = new CommentsLogicImpl();
       return commentsLogic.updateComment(
         Types.ObjectId(newData.commentId),
         comment
