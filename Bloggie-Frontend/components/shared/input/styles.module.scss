@@ -1,0 +1,19 @@
+@import "../../../styles/config";
+
+@mixin font-size-and-padding($font-size, $total-height) {
+  font-size: $font-size;
+  padding: $total-height - $font-size;
+}
+
+.search {
+  border-radius: $radius;
+  border-color: $inp-blur-border;
+  border-style: solid;
+  @include font-size-and-padding(1.3rem, 2rem);
+  margin: 1rem;
+  transition: 0.2s;
+  &:focus {
+    border-color: $inp-focused-border;
+    outline: none;
+  }
+}
