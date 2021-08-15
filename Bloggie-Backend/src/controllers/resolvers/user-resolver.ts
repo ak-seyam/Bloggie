@@ -1,12 +1,9 @@
-import { Max, Min } from "class-validator";
 import {
   Resolver,
   Mutation,
   ArgsType,
   Field,
-  Int,
   Args,
-  InputType,
   Query,
   ObjectType,
   Ctx,

@@ -1,5 +1,5 @@
-import ArticleLogic from "@controllers/data-interaction/article/article-logic";
-import ArticleLogicImpl from "@controllers/data-interaction/article/article-logic-impl";
+import ArticleLogic from "@services/data-interaction/article/article-logic";
+import ArticleLogicImpl from "@services/data-interaction/article/article-logic-impl";
 import { Article } from "@models/article/article";
 import { Comment } from "@models/article/comments";
 import { User, UserRole } from "@models/user/user";
@@ -20,13 +20,10 @@ import {
   Ctx,
 } from "type-graphql";
 import isAuth from "./middleware/auth";
-import PayloadContext from "@services/contexts/user-cotext";
+import PayloadContext from "@controllers/contexts/user-cotext";
 import InvalidInputError from "@utils/api/user-input-error";
-import { InvalidAuthorizationRoleError } from "@utils/api/access-errors";
-import UserLogicImpl from "@controllers/data-interaction/user/user-logic-impl";
-import UserLogic from "@controllers/data-interaction/user/user-logic";
-import { articleDependencyValidator } from "@controllers/data-interaction/article/dependency-validator";
-import { apolloErrorsWrapper } from "@services/utils/graph-ql-resolvers-wrapper";
+import { articleDependencyValidator } from "@services/data-interaction/article/dependency-validator";
+import { apolloErrorsWrapper } from "@controllers/utils/graph-ql-resolvers-wrapper";
 import handleNeitherAuthorNorAdmin from "./utils/author-or-admin";
 
 @ObjectType()

@@ -1,10 +1,10 @@
-import CommentsLogic from "@controllers/data-interaction/comment/comments-logic";
-import CommentsLogicImpl from "@controllers/data-interaction/comment/comments-logic-impl";
-import { commentDependencyValidator } from "@controllers/data-interaction/comment/dependency-validator";
+import CommentsLogic from "@services/data-interaction/comment/comments-logic";
+import CommentsLogicImpl from "@services/data-interaction/comment/comments-logic-impl";
+import { commentDependencyValidator } from "@services/data-interaction/comment/dependency-validator";
 import { Comment } from "@models/article/comments";
 import { User } from "@models/user/user";
-import PayloadContext from "@services/contexts/user-cotext";
-import { apolloErrorsWrapper } from "@services/utils/graph-ql-resolvers-wrapper";
+import PayloadContext from "@controllers/contexts/user-cotext";
+import { apolloErrorsWrapper } from "@controllers/utils/graph-ql-resolvers-wrapper";
 import InvalidInputError from "@utils/api/user-input-error";
 import { Types } from "mongoose";
 import {

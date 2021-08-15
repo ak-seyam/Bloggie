@@ -1,9 +1,4 @@
-import { ApolloServer } from "apollo-server-express";
-import express from "express";
-import getApolloConfig from "@utils/api/get-apollo-schema-config";
-
 import "reflect-metadata";
-import UserResolver from "@services/resolvers/user-resolver";
 import { startingServer } from "@utils/api/server-connection";
 
 require("env_setter");
