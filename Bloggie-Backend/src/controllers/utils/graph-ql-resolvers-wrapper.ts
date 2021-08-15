@@ -4,7 +4,10 @@ import {
   ForbiddenError,
   UserInputError,
 } from "apollo-server";
-import { AsyncFunction, errorsWrapper } from "@controllers/utils/errors-wrapper";
+import {
+  AsyncFunction,
+  errorsWrapper,
+} from "@controllers/utils/errors-wrapper";
 import {
   InvalidAuthenticationStateError,
   InvalidAuthorizationRoleError,
