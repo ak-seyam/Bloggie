@@ -1,4 +1,4 @@
-import { tokenGeneration } from "@services/resolvers/user-resolver";
+import { tokenGeneration } from "@controllers/resolvers/user-resolver";
 import {
   verifyAccessToken,
   verifyRefreshToken,

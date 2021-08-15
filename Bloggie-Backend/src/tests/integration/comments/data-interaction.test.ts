@@ -1,12 +1,9 @@
-import { commentDependencyValidator } from "@controllers/data-interaction/comment/dependency-validator";
-import CommentsLogic from "@controllers/data-interaction/comment/comments-logic";
-import CommentsLogicImpl from "@controllers/data-interaction/comment/comments-logic-impl";
-import ArticleModel from "@models/article/article";
-import CommentModel, { Comment } from "@models/article/comments";
-import UserModel from "@models/user/user";
+import { commentDependencyValidator } from "@services/data-interaction/comment/dependency-validator";
+import CommentsLogic from "@services/data-interaction/comment/comments-logic";
+import CommentsLogicImpl from "@services/data-interaction/comment/comments-logic-impl";
+import { Comment } from "@models/article/comments";
 import articleCreation from "@tests/utils/articles/article-creation";
 import setupTeardown from "@tests/utils/data-interaction/setup-teardown";
-import { mongoose } from "@typegoose/typegoose";
 import InvalidInputError from "@utils/api/user-input-error";
 import { ObjectID } from "mongodb";
 

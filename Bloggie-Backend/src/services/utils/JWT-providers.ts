@@ -1,5 +1,5 @@
-import UserLogic from "@controllers/data-interaction/user/user-logic";
-import UserLogicImpl from "@controllers/data-interaction/user/user-logic-impl";
+import UserLogic from "@services/data-interaction/user/user-logic";
+import UserLogicImpl from "@services/data-interaction/user/user-logic-impl";
 import { UserRole } from "@models/user/user";
 import { JwtPayload, sign, verify } from "jsonwebtoken";
 import { Types } from "mongoose";

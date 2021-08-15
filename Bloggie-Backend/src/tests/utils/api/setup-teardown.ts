@@ -1,7 +1,6 @@
 import ArticleModel from "@models/article/article";
 import CommentModel from "@models/article/comments";
 import UserModel from "@models/user/user";
-import { AsyncFunction } from "@services/utils/errors-wrapper";
 import { mongoose } from "@typegoose/typegoose";
 import { startingServer, teardownServer } from "@utils/api/server-connection";
 

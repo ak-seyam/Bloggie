@@ -1,8 +1,8 @@
-import CommentsLogic from "@controllers/data-interaction/comment/comments-logic";
-import CommentsLogicImpl from "@controllers/data-interaction/comment/comments-logic-impl";
-import { commentDependencyValidator } from "@controllers/data-interaction/comment/dependency-validator";
-import UserLogic from "@controllers/data-interaction/user/user-logic";
-import UserLogicImpl from "@controllers/data-interaction/user/user-logic-impl";
+import CommentsLogic from "@services/data-interaction/comment/comments-logic";
+import CommentsLogicImpl from "@services/data-interaction/comment/comments-logic-impl";
+import { commentDependencyValidator } from "@services/data-interaction/comment/dependency-validator";
+import UserLogic from "@services/data-interaction/user/user-logic";
+import UserLogicImpl from "@services/data-interaction/user/user-logic-impl";
 import { Comment } from "@models/article/comments";
 import { User } from "@models/user/user";
 import { login } from "@tests/integration/utils/login";

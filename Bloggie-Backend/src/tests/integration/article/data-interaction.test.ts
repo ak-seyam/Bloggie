@@ -1,19 +1,19 @@
-import ArticleLogic from "@controllers/data-interaction/article/article-logic";
-import ArticleLogicImpl from "@controllers/data-interaction/article/article-logic-impl";
+import ArticleLogic from "@services/data-interaction/article/article-logic";
+import ArticleLogicImpl from "@services/data-interaction/article/article-logic-impl";
 import ArticleModel, { Article } from "@models/article/article";
 import CommentModel, { Comment } from "@models/article/comments";
 import UserModel, { User } from "@models/user/user";
 import { mongoose } from "@typegoose/typegoose";
-import UserLogic from "@controllers/data-interaction/user/user-logic-impl";
-import UserLogicImpl from "@controllers/data-interaction/user/user-logic-impl";
+import UserLogic from "@services/data-interaction/user/user-logic-impl";
+import UserLogicImpl from "@services/data-interaction/user/user-logic-impl";
 import { ObjectID } from "mongodb";
 import InvalidInputError from "@utils/api/user-input-error";
-import { articleDependencyValidator } from "@controllers/data-interaction/article/dependency-validator";
-import CommentsLogic from "@controllers/data-interaction/comment/comments-logic-impl";
-import CommentsLogicImpl from "@controllers/data-interaction/comment/comments-logic-impl";
+import { articleDependencyValidator } from "@services/data-interaction/article/dependency-validator";
+import CommentsLogic from "@services/data-interaction/comment/comments-logic-impl";
+import CommentsLogicImpl from "@services/data-interaction/comment/comments-logic-impl";
 import articleCreation from "@tests/utils/articles/article-creation";
 import setupTeardown from "@tests/utils/data-interaction/setup-teardown";
-import { commentDependencyValidator } from "@controllers/data-interaction/comment/dependency-validator";
+import { commentDependencyValidator } from "@services/data-interaction/comment/dependency-validator";
 
 describe("Data interaction suit", () => {
   setupTeardown();

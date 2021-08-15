@@ -13,13 +13,11 @@ import {
   UseMiddleware,
   Arg,
 } from "type-graphql";
-import { ObjectId } from "mongodb";
 import { User, UserRole } from "@models/user/user";
 import { Article } from "@models/article/article";
-import UserLogic from "@controllers/data-interaction/user/user-logic";
-import UserLogicImpl from "@controllers/data-interaction/user/user-logic-impl";
-import { DocumentType } from "@typegoose/typegoose";
-import { apolloErrorsWrapper } from "@services/utils/graph-ql-resolvers-wrapper";
+import UserLogic from "@services/data-interaction/user/user-logic";
+import UserLogicImpl from "@services/data-interaction/user/user-logic-impl";
+import { apolloErrorsWrapper } from "@controllers/utils/graph-ql-resolvers-wrapper";
 import {
   signAccessToken,
   signRefreshToken,
@@ -31,7 +29,7 @@ import { InvalidAuthenticationStateError } from "@utils/api/access-errors";
 import { Response } from "express";
 import { MongooseDocument, Types } from "mongoose";
 import isAuth from "./middleware/auth";
-import PayloadContext from "@services/contexts/user-cotext";
+import PayloadContext from "@controllers/contexts/user-cotext";
 
 @ObjectType()
 class UserContent implements Partial<User> {

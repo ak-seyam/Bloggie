@@ -1,6 +1,5 @@
-import { CommentDependencyValidator } from "@controllers/data-interaction/article/dependency-validator";
+import { CommentDependencyValidator } from "@services/data-interaction/article/dependency-validator";
 import CommentModel, { Comment } from "@models/article/comments";
-import UserModel from "@models/user/user";
 import { DocumentType } from "@typegoose/typegoose";
 import InvalidInputError from "@utils/api/user-input-error";
 import { ObjectID } from "mongodb";

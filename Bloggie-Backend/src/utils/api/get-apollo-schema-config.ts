@@ -1,4 +1,3 @@
-import UserResolver from "@services/resolvers/user-resolver";
 import { ApolloServerExpressConfig } from "apollo-server-express";
 import { buildSchema } from "type-graphql";
 
