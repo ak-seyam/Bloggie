@@ -24,7 +24,7 @@ each path should end with a forward slash
 The project will contain
 
 - models (The classes mapped to database documents/collections)
-- controller (Does high intermediate level operations with data, i.e. auth and application details)
+- controller (Does high level operations with data, i.e. auth and application details)
 - service (does the routing, including any middleware)
 - tests
   - unit
