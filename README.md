@@ -5,11 +5,6 @@ Bloggie is webapp to write your blogs and share them. It focus on the writing ex
 ## Motivation
 I and probably you wanted a very simple blogging system that make it easy to write your thoughts and that's it! It doesn't try to do anything other than that. And being free and open-sourced is a good plus, so that's what Bloggie does.
 
-## TODO
-- [x] Backend
-- [ ] Frontend (in progress)
-- [ ] Deployment
- 
 ## Getting started
 To run the application use the starter script
 ```bash
@@ -20,6 +15,11 @@ The starter script take the first agrument and pick the enviroment file with the
 
 ## Contribution
 Check `CONTRIBUTION.md` in each repo
+
+## TODO
+- [x] Backend
+- [ ] Frontend (in progress)
+- [ ] Deployment
 
 ## Components status 
 Check the readme for each repo
