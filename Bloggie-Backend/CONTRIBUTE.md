@@ -24,8 +24,8 @@ each path should end with a forward slash
 The project will contain
 
 - models (The classes mapped to database documents/collections)
-- controller (Does high level operations with data, i.e. auth and application details)
-- service (does the routing, including any middleware)
+- services (Does high level operations with data, i.e. auth and application details)
+- controllers (contains the resolvers, including any middleware) **NOTE:** resolvers are added to the top level **/controllers** only any child folder will not be read by the resolvers reader
 - tests
   - unit
   - integration
