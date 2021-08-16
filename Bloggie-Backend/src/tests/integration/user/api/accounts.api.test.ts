@@ -4,8 +4,8 @@ import {
 } from "@services/utils/JWT-providers";
 import setupTeardownGraphQL_API from "@tests/utils/api/setup-teardown";
 import axios from "axios";
-import UserLogic from "@controllers/data-interaction/user/user-logic";
-import UserLogicImpl from "@controllers/data-interaction/user/user-logic-impl";
+import UserLogic from "@services/data-interaction/user/user-logic";
+import UserLogicImpl from "@services/data-interaction/user/user-logic-impl";
 import { User, UserRole } from "@models/user/user";
 
 describe("User Accounts API Test suite", () => {

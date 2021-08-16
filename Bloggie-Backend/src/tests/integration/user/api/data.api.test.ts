@@ -1,8 +1,8 @@
-import ArticleLogic from "@controllers/data-interaction/article/article-logic";
-import ArticleLogicImpl from "@controllers/data-interaction/article/article-logic-impl";
-import { articleDependencyValidator } from "@controllers/data-interaction/article/dependency-validator";
-import UserLogic from "@controllers/data-interaction/user/user-logic";
-import UserLogicImpl from "@controllers/data-interaction/user/user-logic-impl";
+import ArticleLogic from "@services/data-interaction/article/article-logic";
+import ArticleLogicImpl from "@services/data-interaction/article/article-logic-impl";
+import { articleDependencyValidator } from "@services/data-interaction/article/dependency-validator";
+import UserLogic from "@services/data-interaction/user/user-logic";
+import UserLogicImpl from "@services/data-interaction/user/user-logic-impl";
 import { Article } from "@models/article/article";
 import { User } from "@models/user/user";
 import setupTeardownGraphQL_API from "@tests/utils/api/setup-teardown";

@@ -4,6 +4,8 @@ services:
     build: ./Bloggie-Frontend
     ports:
       - "3000:3000"
+    volumes: 
+      - ./Bloggie-Frontend:/app
   backend:
     build: ./Bloggie-Backend
     ports:

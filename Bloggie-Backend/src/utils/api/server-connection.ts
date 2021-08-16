@@ -3,7 +3,7 @@ import getApolloConfig from "./get-apollo-schema-config";
 import express from "express";
 import http from "http";
 import cookieParser from "cookie-parser";
-import AuthRoutes from "@services/routes/auth-routes";
+import AuthRoutes from "@controllers/routes/auth-routes";
 
 let server: ApolloServer;
 let httpServer: http.Server;
